@@ -248,9 +248,15 @@ class CrudController extends BaseCrudController
     {
         $builder = $this->get('form.factory')->createNamedBuilder('compose_group_mail');
         
+        /* @var $er \IServ\CoreBundle\Entity\GroupRepository */
         $er = $this->getDoctrine()->getRepository('IServCoreBundle:Group');
+        
         /* @var $groups \IServ\CoreBundle\Entity\Group[] */
-        $groups = $er->createFindByFlagQueryBuilder(Privilege::FLAG_USEABLE_AS_SENDER)->orderBy('LOWER(g.name)', 'ASC')->getQuery()->getResult();
+        $groups = $er->createFindByFlagQueryBuilder(Privilege::FLAG_USEABLE_AS_SENDER)
+            ->orderBy('LOWER(g.name)', 'ASC')
+            ->getQuery()
+            ->getResult();
+        
         $choices = [];
         
         foreach ($groups as $group) {
