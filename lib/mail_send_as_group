@@ -1,0 +1,259 @@
+#!/usr/bin/perl -CSDAL
+
+use strict;
+use warnings;
+use utf8;
+use Cwd qw/abs_path/;
+use Encode qw/encode/;
+use File::Basename;
+use File::Copy;
+use File::MimeInfo;
+use File::Slurp;
+use File::Slurp::Unicode;
+use IServ::Conf;
+use IServ::DB;
+use IServ::User;
+use IServ::Valid;
+use sessauth;
+use MIME::Lite;
+
+sub error($) {
+  my ($error) = @_;
+  print STDERR $error."\n";
+  exit 1;
+}
+
+my $m_ip = qr/[\d.:]{1,64}/;
+
+my $login_pwd = $ENV{PASSWORD} // $ENV{SESSPW};
+my ($login_ip) = ($ENV{IP} // "") =~ /^($m_ip)$/;
+my ($login_ip_fwd) = ($ENV{IPFWD} // "") =~ /^($m_ip)$/;
+my ($auth_level, $auth_user, $text);
+my (@msg_recipients_display, @msg_recipients, @attachments);
+
+if (@ARGV < 6) {
+  print STDERR "Usage: mail_send_as_group LOGIN GROUP RECIPIENTS RECIPIENTSDISPLAY MSGTITLE MSGCONTENTFILE [LISTOFATTACHMENTS]\n";
+  print STDERR "Environment: PASSWORD, IP, IPWD\n";
+  print STDERR "\n";
+  print STDERR "RECIPIENTS, RECIPIENTSDISPLAY and LISTOFATTACHMENTS are comma-separated lists.\n";
+  exit 1;
+}
+
+my ($login_act, $grp, $msg_recipient_list, $msg_recipient_display_list, $msg_title, $content_file, $attachment_list) = @ARGV;
+$attachment_list = '' unless defined $attachment_list;
+
+my (undef, undef, $uid, $gid) = getpwnam $grp or die "getpwnam failed\n";
+
+# prevent hijacking of system accounts
+$uid >= 500 or error "UID too low";
+
+# validate password, user and group
+$login_act = IServ::Valid::User $login_act;
+$login_pwd = IServ::Valid::Passwd $login_pwd;
+$grp = IServ::Valid::Group $grp;
+
+# get full names of user and group for logging
+my $grp_name = IServ::Tools::pwname $grp;
+my $login_name = IServ::Tools::pwname $login_act;
+
+# get server domain from iservcfg
+my $fn = "/var/lib/iserv/config/config.pm";
+my $domain = 'unassigned';
+undef %{ENV};
+
+if (-r $fn) {
+  require $fn;
+  $domain = $conf->{Domain};
+}
+
+sub chusr {
+  my @groups = ();
+  
+  # get memberships for user
+  while (my (undef, undef, $gid, $members) = getgrent) {
+    foreach (split /\s+/, $members) {
+      push @groups, $gid if $_ eq $grp; 
+    } 
+  }
+  
+  setgrent;
+  undef $!; # getgrent can throw errors
+  
+  # modify current process to run with the privileges of the user
+  my $grp = join(" ", $gid, sort { $a <=> $b } $gid, @groups);
+  $) = $grp; # egid + groups
+  $( = $gid; # rgid
+  $> = $uid; # euid
+  $< = $uid; # ruid
+
+  # check for sucessful user change
+  die "chusr failed\n"
+    if $! or $) ne $grp or $( ne $grp or $> ne $uid or $< ne $uid;
+}
+
+sub do_auth {
+  # no session password = no auth
+  if (not defined $login_pwd) {
+    $auth_level = "none";
+  } else {
+    # try to login via sessauth
+    my $res = sessauth::sessauth $login_act, $login_pwd, "send_mail_as_group";
+    error "wrong session password" unless $res =~ /^OK\b/;
+    # get auth level
+    $auth_level = $res =~ /^OK adm\b/? "admin": "user";
+    $auth_user = $login_act;
+  }
+
+  # set parameters for log
+  $IServ::DB::logname = $login_name;
+  $IServ::DB::logip = $login_ip;
+  $IServ::DB::logipfwd = $login_ip_fwd;
+}
+
+sub auth_level {
+  do_auth unless defined $auth_level;
+
+  $auth_level;
+}
+
+sub send_mail {
+  my $to = "";
+
+  for (my $i = 0; $i lt @msg_recipients; $i++) {
+    if ($i gt 0) {
+      $to .= ", ";
+    }
+
+    $to .= "$msg_recipients_display[$i] <$msg_recipients[$i]>";
+  }
+
+  my $msg = MIME::Lite->new(
+      To        => $to,
+      Subject   => encode('MIME-Header', $msg_title),
+      Type      => 'multipart/mixed',
+  );
+
+  my $part = MIME::Lite->new(
+      Type    => 'TEXT',
+      Data    => encode('UTF-8', $text),
+      Encoding => 'quoted-printable',
+  );
+
+  $part->attr('content-type.charset' => 'UTF-8');
+  $msg->attach($part);
+  
+  foreach my $attachment (@attachments) {
+    my $mimetype = File::MimeInfo::mimetype $attachment or error "failed to get mimetype: $!";
+    my $basename = File::Basename::basename $attachment or error "failed to get basename: $!";
+
+    $part = MIME::Lite->new(
+	Type  => $mimetype,
+	Path  => $attachment,
+    	Filename => $basename,
+    );
+
+    $part->attr('content-disposition' => 'attachment');
+
+    $msg->attach($part);
+  }
+  
+  $msg->send;
+}
+
+sub check_path($) {
+  my ($path) = @_;
+  my $realpath = abs_path $path;
+
+  $realpath =~ /\/tmp\/mail-send-as-group\/(.*)/ or error "invalid file path!";
+}
+
+sub req_auth {
+  error "need auth" unless (auth_level eq "user") || (auth_level eq "admin");
+}
+
+sub req_priv($) {
+  my ($priv) = @_;
+  error "need privilege $priv"
+  unless IServ::DB::Do "SELECT 1 FROM users_priv
+    WHERE Act = ? AND Privilege = ?", $auth_user, $priv;
+}
+
+sub req_flag($$) {
+  my ($group, $flag) = @_;
+  error "group $group needs flag $flag"
+  unless IServ::DB::Do "SELECT 1 FROM groups_flag
+    WHERE Act = ? AND Flag = ?", $group, $flag;
+}
+
+sub req_member($) {
+  my ($group) = @_;
+  error "user $auth_user needs membership in group $group"
+  unless IServ::DB::Do "SELECT 1 FROM members 
+    WHERE ActUser = ? AND ActGrp = ?", $auth_user, $group;
+}
+
+sub db_log {
+  # hack to get id of new message
+  my ($msg_id) = IServ::DB::SelectRow "INSERT INTO mail_send_as_group_log (msg_title, sender, msg_body, time) VALUES (?, ?, ?, NOW()) RETURNING id", $msg_title, $grp, $text or error "insert message failed: $!";
+
+  for (my $i = 0; $i lt @msg_recipients; $i++) {
+    IServ::DB::Do "INSERT INTO mail_send_as_group_log_recipient (msg_id, recipient, recipient_display) VALUES (?, ?, ?)", $msg_id, $msg_recipients[$i], $msg_recipients_display[$i] or error "insert recipient failed: $!;"; 
+  }
+
+  foreach my $attachment (@attachments) {
+    my $mimetype = File::MimeInfo::mimetype $attachment or error "failed to get mimetype: $!";
+    my $basename = File::Basename::basename $attachment or error "failed to get basename: $!";
+    my @lines = File::Slurp::read_file $attachment or error "failed to get file content: $!";
+    my $data = join("", @lines);
+
+    my ($file_id) = IServ::DB::SelectRow "INSERT INTO mail_send_as_group_log_files (msg_id, mime, name) VALUES (?, ?, ?) RETURNING id", $msg_id, $mimetype, $basename or error "insert file meta data failed: $!";
+
+    File::Copy::copy $attachment, "/var/lib/stsbl/send-mail-as-group/mail-files/$file_id-$basename" or error "copying file to destination failed: $!";   
+  }
+
+  my $log_text = sprintf "E-Mail im Namen der Gruppe %s (%s\@%s) versendet", $grp_name, $grp, $domain;
+  my %row;
+  $row{module} = "Group e-mail";
+ 
+  IServ::DB::Log $log_text, %row;
+}
+
+# requirements
+req_auth;
+req_priv "mail_send_as_grp";
+req_flag $grp, "mail_useable_as_sender"; 
+req_member $grp;
+
+# split recipients and recipient display
+@msg_recipients = split(/,/, $msg_recipient_list);
+@msg_recipients_display = split(/,/, $msg_recipient_display_list);
+
+if (@msg_recipients == 0) {
+  error "too less recipients!";
+}
+
+if (@msg_recipients ne @msg_recipients_display) {
+  error "recipients and recipients_display number are not the same!";
+}
+
+
+# filter out files which are not in temp
+@attachments = split(/,/, $attachment_list);
+
+check_path $content_file;
+foreach my $attachment (@attachments) {
+  check_path $attachment;
+}
+
+# open content file
+my @lines = File::Slurp::Unicode::read_file $content_file;
+$text = join("", @lines);
+
+# log sended message
+db_log;
+
+# change user to group account
+chusr;
+
+# send mail
+send_mail;

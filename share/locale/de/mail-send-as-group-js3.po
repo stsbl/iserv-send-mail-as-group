@@ -1,0 +1,7 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Unexcpected error during sending e-mail. Please try again."
+msgstr "Unerwarteter Fehler während des E-Mail-Versendens. Bitte erneut versuchen."

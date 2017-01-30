@@ -1,0 +1,70 @@
+{# src/Stsbl/SendMailAsGroup/Resources/views/Crud/groupmail_index.html.twig #}
+{% extends 'IServCrudBundle:Crud:index.html.twig' %}
+{% import 'IServCrudBundle::macros.html.twig' as crudm %}
+{% import 'StsblSendMailAsGroupBundle::macros.html.twig' as m %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    {% if app.environment != 'prod' %}
+        <!-- {{ _self.templateName }} => groupmail.css -->
+    {% endif %}
+    {% stylesheets output='css/compiled/groupmail.css' '@StsblSendMailAsGroupBundle/Resources/public/css/groupmail.less' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    {% if app.environment != 'prod' %}
+	<!-- {{ _self.templateName }} => mail-as-group_form.js -->
+    {% endif %}
+    {% javascripts output='js/compiled/mail-as-group_form.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}    
+    
+    {% if app.environment != 'prod' %}
+	<!-- {{ _self.templateName }} => mail-as-group_form.js -->
+    {% endif %}
+    {% javascripts output='js/compiled/mail-as-group_autocomplete.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_autocomplete.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% if app.environment != 'prod' %}
+	<!-- {{ _self.templateName }} => mail-as-group_scroll.js -->
+    {% endif %}
+    {% javascripts output='js/compiled/mail-as-group_scroll.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_scroll.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}   
+{% endblock %}
+
+{% block content %}
+    <div class="btn-toolbar container container-block">
+        <div class="col-md-10"></div>
+        <div class="pull-right" id="groupmmail-jmp-btn-container">
+            {{ crudm.linkButton(path('group_mail_index') ~ '#groupmail-compose-hook', _('Jump to compose e-mail'), 'circle-arrow-down', 'btn-link') }}
+        </div>
+    </div>
+    <div class="groupmail-spacer-30"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ _('E-mail archive') }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info">{{ _('Below you can search for e-mails which were send in the past in name of the groups where you are a member.') }}</div>
+        </div>
+    </div>
+    {{ parent() }}
+    <div class="groupmail-spacer-15"></div>
+    <span id="groupmail-compose-hook"></span>
+    <div class="alert alert-warning">{{ _('The e-mail will stored in the mail archive after sending.') }}</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ _('Send a new e-mail') }}</h3>
+        </div>
+        <div class="panel-body">
+            {{ form(compose_form) }}
+        </div>
+    </div>
+{% endblock %}

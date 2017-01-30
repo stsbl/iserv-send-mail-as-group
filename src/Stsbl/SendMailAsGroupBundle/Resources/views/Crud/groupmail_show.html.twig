@@ -1,0 +1,17 @@
+{# src/Stsbl/SendMailAsGroup/Resources/views/Crud/groupmail_show.html.twig #}
+{% extends 'IServCrudBundle:Crud:show.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    {% if app.environment != 'prod' %}
+        <!-- {{ _self.templateName }} => groupmail.css -->
+    {% endif %}
+    {% stylesheets output='css/compiled/groupmail.css' '@StsblSendMailAsGroupBundle/Resources/public/css/groupmail.less' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+{% endblock %}

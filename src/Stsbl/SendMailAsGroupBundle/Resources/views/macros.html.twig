@@ -1,0 +1,34 @@
+{# src/Stsbl/SendMailAsGroupBundle/Resources/views/macros.html.twig #}
+
+{% macro attachment_field(value) %}
+    {% if value|length < 1 %}
+        ({{ _('none') }})
+    {% else %}
+        <div class="groupmail-attachments-container">
+            {% for file in value %}
+                <div class="groupmail-attachment pull-left">
+                    <div class="groupmail-attachment-info">
+                        {% if file.mime starts with 'image' %}
+                            {% set icon = 'legacy-file-img' %}
+                        {% elseif file.mime == 'application/x-shellscript' %}
+                            {% set icon = 'legacy-file-dev' %}
+                        {% elseif file.mime matches '/(zip|compressed-tar)/' %}
+                            {% set icon = 'legacy-file-pack' %}
+                        {% elseif file.mime starts with 'text' %}
+                            {% set icon = 'legacy-file-ptext' %}
+                        {% elseif file.mime == 'application/msword' or file.mime starts with 'application/vnd.openxmlformats' or file.mime starts with 'application/vnd.oasis.opendocument' %}
+                            {% set icon = 'legacy-file-ftext' %}
+                        {% elseif file.mime == 'application/pdf' %}
+                            {% set icon = 'legacy-file-pdf' %}
+                        {% else %}
+                            {% set icon = 'legacy-file' %}
+                        {% endif %}
+                        <a href="{{ path('group_mail_download', {'messageid': file.mail.id, 'attachmentid': file.id}) }}">{{ icon(icon) }}{{ file.name }}</a>
+                        <br />
+                        <span class="text-muted small">({{ file.size }} KB)</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endmacro %}

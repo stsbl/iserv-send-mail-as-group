@@ -1,0 +1,10 @@
+{# src/Stsbl/SendMailAsGroupBundle/Resources/views/List/field_messagetext.html.twig #}
+{% extends admin.getTemplate('list_field_base') %}
+
+{% block field %}
+    {% if value is null and value == "" %}
+        -
+    {% else %}
+        {{ value|nl2br }}
+    {% endif %}
+{% endblock %}
