@@ -186,6 +186,73 @@ class CrudController extends BaseCrudController
     }
     
     /**
+     * Check if a group has the mail_ext privilege
+     * 
+     * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
+     * @Route("groupmail/mailext", name="group_mail_lookup_priv", options={"expose": true})
+     * @Method("GET")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function lookupPrivAction(Request $request)
+    {
+        // Get group act and type from request
+        $groupAct = $request->query->get('group');
+        $type = $request->query->get('type');
+        $ret = null;
+        
+        if (empty($groupAct)) {
+            throw new \InvalidArgumentException('group should not be empty.');
+        }
+        
+        if ($type !== 'priv' && $type !== 'flag' && $type !== 'flag_internal') {
+            throw new \InvalidArgumentException(sprintf('type should be priv, flag_internal or flag, "%s" given.', $type));
+        }
+        
+        /* @var $er \IServ\CoreBundle\Entity\GroupRepository */
+        $er = $this->getDoctrine()->getRepository('IServCoreBundle:Group');
+        
+        /* @var $groups \IServ\CoreBundle\Entity\Group[] */
+        if ($type === 'priv') {
+            $groups = $er->findByPrivilege('PRIV_MAIL_EXT');
+        } else if ($type === 'flag') {
+            $groups = $er->findByFlag('mail_ext');
+        } else if ($type === 'flag_internal') {
+            // Support for stsbl-iserv-mail-config
+            // Only enable it if the flag exists
+            $fr = $this->getDoctrine()->getRepository('IServCoreBundle:GroupFlag');
+            $flag = $fr->find('mail_int');
+            
+            // skip if not supported
+            if(is_null($flag)) {
+                $ret = true;
+                goto response;
+            } else {
+                $groups = $er->findByFlag('mail_int');
+            }
+        }
+        
+        if (count($groups) < 1) {
+            throw new NoResultException();
+        }
+        
+        foreach ($groups as $group) {
+            if ($group->getAccount() == $groupAct) {
+                $ret = true;
+                break;
+            }
+        }
+        
+        if (is_null($ret)) {
+            // if we had no result before, assume false
+            $ret = false;
+        }
+        
+        response:
+        return new JsonResponse(['result' => $ret]);
+    }
+    
+    /**
      * Downloads an attachment
      * 
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")

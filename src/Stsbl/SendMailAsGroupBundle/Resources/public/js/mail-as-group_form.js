@@ -39,7 +39,7 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
         });
     }
     
-    function initialize()
+    function registerSubmitHandler()
     {
         var form = $('[name="compose_group_mail"]');
         var target = IServ.Routing.generate('group_mail_send');
@@ -83,7 +83,108 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
             
             e.preventDefault();
             return false;
+        });    
+    }
+    
+    function updateMailPrivNotifier(e)
+    {
+        var currentGroup = e.val();
+        var hook = $('#groupmail-compose-hook');
+        
+        if (currentGroup.length > 0) {
+            var hasPrivilege = lookupMailPriv(currentGroup, 'priv');
+            removeMailExtPrivWarning();
+            removeMailExtFlagWarning();
+            removeMailIntFlagWarning();
+            
+            if (!hasPrivilege) {
+                addMailExtPrivWarning(hook);
+            } else {
+                var hasFlag = lookupMailPriv(currentGroup, 'flag');
+                
+                if (!hasFlag) {
+                    addMailExtFlagWarning(hook);
+                }
+            }
+            
+            var hasInternalFlag = lookupMailPriv(currentGroup, 'flag_internal');
+            
+            if(!hasInternalFlag) {
+                addMailIntFlagWarning(hook);
+            }
+        }
+    }
+    
+    function registerMailPrivNotifier()
+    {
+        var e = $('#compose_group_mail_group');
+        
+        // insert warning if there is already a group selected and it has not the privilege(s)
+        updateMailPrivNotifier(e);
+        
+        // register dynamic update for future changes
+        e.change(function() {
+            updateMailPrivNotifier($(this));
         });
+    }
+    
+    function addMailExtPrivWarning(e)
+    {
+        e.after(function() {
+           return '<div class="alert alert-warning" id="groupmail-ext-priv-alert">' + _('The selected sender is not allowed to send e-mails to other servers.') + '</div>'; 
+        });
+    }
+    
+    function addMailExtFlagWarning(e)
+    {
+        e.after(function() {
+           return '<div class="alert alert-warning" id="groupmail-ext-flag-alert">' + _('The selected sender can not receive replies from external e-mail addresses.') + '</div>'; 
+        });
+    }
+    
+    function addMailIntFlagWarning(e)
+    {
+        e.after(function() {
+           return '<div class="alert alert-warning" id="groupmail-int-flag-alert">' + _('The selected sender can not receive replies from internal e-mail addresses.') + '</div>'; 
+        });
+    }
+    
+    function removeMailExtPrivWarning()
+    {
+        $('#groupmail-ext-priv-alert').remove();
+    }
+    
+    function removeMailExtFlagWarning()
+    {
+        $('#groupmail-ext-flag-alert').remove();
+    }
+    
+    function removeMailIntFlagWarning()
+    {
+        $('#groupmail-int-flag-alert').remove();
+    }
+    
+    function lookupMailPriv(group, type)
+    {
+        var ret;
+        
+        // don't use $.getJSON here, because it is asynchronously
+        $.ajax({
+            async: false,
+            dataType: 'json',
+            url: IServ.Routing.generate('group_mail_lookup_priv') + '?type=' + type + '&group=' + group, 
+            success: function(data) {
+                ret = data.result;
+            }
+        });
+        
+        return ret;
+    }
+    
+    function initialize()
+    {
+        registerSubmitHandler();
+        registerMailPrivNotifier();
     }
     
     // Public API
