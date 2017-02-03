@@ -1,0 +1,5 @@
+debian/stsbl-iserv-send-mail-as-group/*
+debian/stsbl-iserv-send-mail-as-group.debhelper.log
+debian/stsbl-iserv-send-mail-as-group.substvars
+debian/files
+debian/debhelper-build-stamp
