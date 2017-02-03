@@ -124,8 +124,7 @@ sub send_mail {
       $to .= '; ';
     }
 
-    #$to .= $msg_recipients_display[$i].' <'.$msg_recipients[$i].'>';
-    $to .= $msg_recipients[$i];
+    $to .= $msg_recipients_display[$i].' <'.$msg_recipients[$i].'>';
   }
 
   my $msg = MIME::Lite->new(
