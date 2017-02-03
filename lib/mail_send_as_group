@@ -117,17 +117,19 @@ sub auth_level {
 }
 
 sub send_mail {
-  my $to = "";
+  my $to = '';
 
   for (my $i = 0; $i lt @msg_recipients; $i++) {
     if ($i gt 0) {
-      $to .= ", ";
+      $to .= '; ';
     }
 
-    $to .= "$msg_recipients_display[$i] <$msg_recipients[$i]>";
+    #$to .= $msg_recipients_display[$i].' <'.$msg_recipients[$i].'>';
+    $to .= $msg_recipients[$i];
   }
 
   my $msg = MIME::Lite->new(
+      From      => "$grp_name <$grp\@$domain>", 
       To        => $to,
       Subject   => encode('MIME-Header', $msg_title),
       Type      => 'multipart/mixed',

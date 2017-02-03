@@ -1,1 +1,1 @@
-www-data        ALL = (root) NOPASSWD: /usr/lib/iserv/act_cancel_membership
+www-data        ALL = (root) NOPASSWD: /usr/lib/iserv/mail_send_as_group
