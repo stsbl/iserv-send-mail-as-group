@@ -1,7 +1,7 @@
 priv.mail_send_as_grp:
 module          E-mail
 title           Send e-mails in name of groups
-description     Users with this privilege can send e-mails with a group where there are a member as sender. 
+description     Users with this privilege can send e-mails with a group where there are a member as sender.
 assign          admins
 
 flag.mail_useable_as_sender:
