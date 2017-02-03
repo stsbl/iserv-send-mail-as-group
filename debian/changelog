@@ -1,5 +1,5 @@
-stsbl-iserv-send-mail-as-group (17.02.03-0-1) unstable; urgency=low
+stsbl-iserv-send-mail-as-group (17.02.03-0) experimental; urgency=medium
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release.
 
  -- Stadtteilschule Blankenese <repository@stsbl.de>  Fri, 03 Feb 2017 05:40:50 +0100
