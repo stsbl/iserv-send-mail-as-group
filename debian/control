@@ -8,7 +8,7 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-send-mail-as-group
 
 Package: stsbl-iserv-send-mail-as-group
 Architecture: all
-Depends: iserv-portal, stsbl-iserv3-maintenance
+Depends: iserv-portal, stsbl-iserv3-maintenance, libfile-mimeinfo-perl
 Description: E-Mails im Namen einer Gruppe versenden für IServ 
  Erlaubt es ausgewählten Benutzern eine E-Mail mit der E-Mail-Adresse einer Gruppe in der sie Mitglied sind, zu versenden.
 Tag: suite::iserv:portal, role::plugin, implemented-in::php, implemented-in::perl 
