@@ -40,7 +40,7 @@ msgstr "Trennen Sie mehrere Empfänger mit einem Komma."
 msgid "Send e-mails in name of groups"
 msgstr "E-Mails im Namen von Gruppen versenden"
 
-msgid "Users with this privileges can send e-mails with a group where there are a member as sender."
+msgid "Users with this privilege can send e-mails with a group where there are a member as sender."
 msgstr "Benutzer mit diesem Recht können E-Mails mit einer Gruppe, in der sie Mitglied sind, als Absender verschicken."
 
 msgid "Group can used be as sender"
