@@ -43,28 +43,17 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
     {
         var form = $('[name="compose_group_mail"]');
         var target = IServ.Routing.generate('group_mail_send');
+        var spinner = IServ.Spinner.add('#compose_group_mail_submit');
             
         form.submit(function(e) {      
             $.ajax({
                 beforeSend: function() {
                     IServ.Loading.on('stsbl.mail-as-group.form');
+                    spinner.data('spinner').start();
                 },
                 success: function(data) {    
                     IServ.Loading.off('stsbl.mail-as-group.form');
-                    
-                    /*
-                    NOT longer required, now handled by Message.JS automatically. \o/
-                    
-                    var i = 0;
-                    while (i < data.messages.length) {
-                        /*if (data.messages[i].type === 'error') {
-                            IServ.Message.error(data.messages[i].message, 10000, false);
-                        } else if (data.messages[i].type === 'success') {
-                            IServ.Message.success(data.messages[i].message, 10000, false);
-                        }
-                        
-                        i++;
-                    }*/
+                    spinner.data('spinner').stop();
                     
                     if (data.result === 'success') {
                         resetForm();
@@ -72,6 +61,7 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
                 },
                 error: function() {
                     IServ.Loading.off('stsbl.mail-as-group.form');
+                    spinner.data('spinner').stop();
                     IServ.Message.error(_('Unexcpected error during sending e-mail. Please try again.'), false, '.output');
                 },
                 url: target,
