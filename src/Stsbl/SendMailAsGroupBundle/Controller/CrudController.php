@@ -128,6 +128,10 @@ class CrudController extends BaseCrudController
      */
     public function sendAction(Request $request)
     {
+        if (!$request->isXmlHttpRequest()) {
+            throw new \RuntimeException('Only XmlHttpRequests are supported.');
+        }
+        
         $form = $this->getForm();
         $form->handleRequest($request);
         
