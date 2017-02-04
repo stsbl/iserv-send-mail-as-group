@@ -26,16 +26,56 @@ IServ.SendMailAsGroup = {};
 IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
     "use strict";
     
+    var returnFalseHandler = function() {
+        return false;
+    };
+    
     function resetForm()
     {
         $('#compose_group_mail_subject').val('');
         $('#compose_group_mail_group').val('');
         $('#compose_group_mail_recipients').val('');
         $('#compose_group_mail_body').val('');
-        var attachments = $('[id^="compose_group_mail_attachments"');
+        var attachments = $('#compose_group_mail_attachments > ul.bc-collection > li');
                 
         attachments.each(function () {
-            $(this).val('');
+            $(this).remove();
+        });
+    }
+    
+    function lockForm()
+    {
+        $('#compose_group_mail_subject').prop('disabled', true);
+        $('#compose_group_mail_group').prop('disabled', true);
+        $('#compose_group_mail_recipients').prop('disabled', true);
+        $('#compose_group_mail_body').prop('disabled', true);
+        
+        var addFileButton = $('[data-collection="compose_group_mail_attachments"');
+        addFileButton.attr('disabled', 'disabled');
+        addFileButton.bind('click', returnFalseHandler);
+        
+        var attachments = $('[id^="compose_group_mail_attachments_"]');
+                
+        attachments.each(function () {
+            $(this).prop('disabled', true)
+        });
+    }
+    
+    function unlockForm()
+    {
+        $('#compose_group_mail_subject').prop('disabled', false);
+        $('#compose_group_mail_group').prop('disabled', false);
+        $('#compose_group_mail_recipients').prop('disabled', false);
+        $('#compose_group_mail_body').prop('disabled', false);
+        
+        var addFileButton = $('[data-collection="compose_group_mail_attachments"');
+        addFileButton.removeAttr('disabled');
+        addFileButton.unbind('click', returnFalseHandler);
+        
+        var attachments = $('[id^="compose_group_mail_attachments_"]');
+                
+        attachments.each(function () {
+            $(this).prop('disabled', false)
         });
     }
     
@@ -50,10 +90,12 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
                 beforeSend: function() {
                     IServ.Loading.on('stsbl.mail-as-group.form');
                     spinner.data('spinner').start();
+                    lockForm();
                 },
                 success: function(data) {    
                     IServ.Loading.off('stsbl.mail-as-group.form');
                     spinner.data('spinner').stop();
+                    unlockForm();
                     
                     if (data.result === 'success') {
                         resetForm();
@@ -62,6 +104,8 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
                 error: function() {
                     IServ.Loading.off('stsbl.mail-as-group.form');
                     spinner.data('spinner').stop();
+                    //unlockForm();
+                    
                     IServ.Message.error(_('Unexcpected error during sending e-mail. Please try again.'), false, '.output');
                 },
                 url: target,
