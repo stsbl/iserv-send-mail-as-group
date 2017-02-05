@@ -5,7 +5,7 @@
     {{ parent() }}
     
     {% if app.environment != 'prod' %}
-        <!-- {{ _self.templateName }} => groupmail.css -->
+        <!-- {{ _self }} => groupmail.css -->
     {% endif %}
     {% stylesheets output='css/compiled/groupmail.css' '@StsblSendMailAsGroupBundle/Resources/public/css/groupmail.less' filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />

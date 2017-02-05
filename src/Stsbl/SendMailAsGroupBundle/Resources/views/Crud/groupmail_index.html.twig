@@ -7,7 +7,7 @@
     {{ parent() }}
     
     {% if app.environment != 'prod' %}
-        <!-- {{ _self.templateName }} => groupmail.css -->
+        <!-- {{ _self }} => groupmail.css -->
     {% endif %}
     {% stylesheets output='css/compiled/groupmail.css' '@StsblSendMailAsGroupBundle/Resources/public/css/groupmail.less' filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -18,21 +18,21 @@
     {{ parent() }}
     
     {% if app.environment != 'prod' %}
-	<!-- {{ _self.templateName }} => mail-as-group_form.js -->
+	<!-- {{ _self }} => mail-as-group_form.js -->
     {% endif %}
     {% javascripts output='js/compiled/mail-as-group_form.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}    
     
     {% if app.environment != 'prod' %}
-	<!-- {{ _self.templateName }} => mail-as-group_form.js -->
+	<!-- {{ _self }} => mail-as-group_form.js -->
     {% endif %}
     {% javascripts output='js/compiled/mail-as-group_autocomplete.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_autocomplete.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {% if app.environment != 'prod' %}
-	<!-- {{ _self.templateName }} => mail-as-group_scroll.js -->
+	<!-- {{ _self }} => mail-as-group_scroll.js -->
     {% endif %}
     {% javascripts output='js/compiled/mail-as-group_scroll.js' filter='?uglifyjs2' '@StsblSendMailAsGroupBundle/Resources/public/js/mail-as-group_scroll.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
