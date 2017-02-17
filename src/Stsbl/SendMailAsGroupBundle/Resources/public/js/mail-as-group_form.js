@@ -104,7 +104,7 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
                 error: function() {
                     IServ.Loading.off('stsbl.mail-as-group.form');
                     spinner.data('spinner').stop();
-                    //unlockForm();
+                    unlockForm();
                     
                     IServ.Message.error(_('Unexcpected error during sending e-mail. Please try again.'), false, '.output');
                 },
