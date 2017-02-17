@@ -106,7 +106,7 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
                     spinner.data('spinner').stop();
                     unlockForm();
                     
-                    IServ.Message.error(_('Unexcpected error during sending e-mail. Please try again.'), false, '.output');
+                    IServ.Message.error(_('Unexcpected error during sending e-mail. Please try again.'), false, '#groupmail-compose-hook');
                 },
                 url: target,
                 type: 'POST',
@@ -201,12 +201,13 @@ IServ.SendMailAsGroup.Form = IServ.register(function(IServ) {
     function lookupMailPriv(group, type)
     {
         var ret;
+        var target =IServ.Routing.generate('group_mail_lookup_priv') + '?type=' + type + '&group=' + group;
         
         // don't use $.getJSON here, because it is asynchronously
         $.ajax({
             async: false,
             dataType: 'json',
-            url: IServ.Routing.generate('group_mail_lookup_priv') + '?type=' + type + '&group=' + group, 
+            url: target, 
             success: function(data) {
                 ret = data.result;
             }
