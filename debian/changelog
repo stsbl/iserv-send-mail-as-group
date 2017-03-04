@@ -1,3 +1,19 @@
+stsbl-iserv-send-mail-as-group (17.03.04-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Added required exim configuration.
+  * Fixed l10n.
+  * Fixed priv i18n.
+  * Added loading spinner on submit button (Spinner.JS).
+  * Lock form during sending.
+  * Throw exception on non XmlHttpRequest.
+  * Replace deprecated _self.templateName with _self.
+  * Reunlock form after send error.
+  * Show warning directly above the form instead of page head.
+  * Removed experimental and highlighted status.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sat, 04 Mar 2017 23:50:22 +0100
+
 stsbl-iserv-send-mail-as-group (17.02.03-2) experimental; urgency=medium
 
   [ Felix Jacobi ]
