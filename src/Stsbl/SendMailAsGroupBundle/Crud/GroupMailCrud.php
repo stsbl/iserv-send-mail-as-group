@@ -3,6 +3,7 @@
 namespace Stsbl\SendMailAsGroupBundle\Crud;
 
 use Doctrine\ORM\EntityManager;
+use IServ\CoreBundle\Entity\Specification\GroupsMembershipSpecification;
 use IServ\CrudBundle\Crud\AbstractCrud;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\ListMapper;
@@ -229,5 +230,13 @@ class GroupMailCrud extends AbstractCrud
     public function isAuthorized()
     {
         return $this->isGranted(Privilege::SEND_AS_GROUP);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilterSpecification() 
+    {
+        return new GroupsMembershipSpecification('sender', $this->getUser());
     }
 }
