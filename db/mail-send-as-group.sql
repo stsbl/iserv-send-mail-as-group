@@ -61,3 +61,4 @@ CREATE TABLE mail_send_as_group_log_files (
 
 GRANT SELECT, USAGE ON "mail_send_as_group_log_id_seq", "mail_send_as_group_log_recipient_id_seq", "mail_send_as_group_log_files_id_seq" TO "symfony";
 GRANT SELECT ON "mail_send_as_group_log", "mail_send_as_group_log_recipient", "mail_send_as_group_log_files" TO "symfony";
+GRANT SELECT ON "privileges_assign" TO "exim";
