@@ -1,3 +1,11 @@
+stsbl-iserv-send-mail-as-group (17.03.11-0) experimental; urgency=medium
+
+  [ Felix Jacobi ]
+  * Fixed filtering.
+  * Added missing sql code.
+
+ -- Stadtteilschule Blankenese <repository@stsbl.de>  Sat, 11 Mar 2017 21:52:50 +0100
+
 stsbl-iserv-send-mail-as-group (17.03.04-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
