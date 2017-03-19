@@ -6,6 +6,6 @@ assign          admins
 
 flag.mail_useable_as_sender:
 module          E-mail
-title           Group can used be as sender
+title           Group can be used as sender
 description     Assign this flag to groups which are supposed to be used as sender by users with the privilege "Send e-mails in name of group".
 assign          admins

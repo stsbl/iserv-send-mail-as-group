@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-19 14:19+0100\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js:109
+msgid "Unexcpected error during sending e-mail. Please try again."
+msgstr ""
+"Unerwarteter Fehler während des E-Mail-Versendens. Bitte versuchen Sie es "
+"erneut."
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js:168
+msgid "The selected sender is not allowed to send e-mails to other servers."
+msgstr "Der ausgewählte Absender darf keine E-Mails an andere Server senden."
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js:175
+msgid ""
+"The selected sender can not receive replies from external e-mail addresses."
+msgstr ""
+"Der ausgewählte Absender kann keine Antworten von externen E-Mail-Adressen "
+"erhalten."
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/public/js/mail-as-group_form.js:182
+msgid ""
+"The selected sender can not receive replies from internal e-mail addresses."
+msgstr ""
+"Der ausgewählte Absender kann keine Antworten von internen E-Mail-Adressen "
+"erhalten."

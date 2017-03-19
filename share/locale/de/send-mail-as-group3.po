@@ -1,0 +1,157 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-19 15:40+0100\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:269
+msgid "none"
+msgstr "keine"
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:864
+msgid "Jump to compose e-mail"
+msgstr "Zum Verfassen einer E-Mail springen"
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:873
+msgid "E-mail archive"
+msgstr "E-Mail-Archiv"
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:879
+msgid ""
+"Below you can search for e-mails which were send in the past in name of the "
+"groups where you are a member."
+msgstr ""
+"Unten können Sie nach E-Mails suchen, die in der Vergangenheit im Namen "
+"einer Gruppe versendet wurden, in der Sie Mitglied sind."
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:891
+msgid "The e-mail will stored in the mail archive after sending."
+msgstr "Die E-Mail wird nach dem Versand im E-Mail-Archiv gespeichert."
+
+#: /tmp/send-mail-as-group-StsblSendMailAsGroupBundle.twig.php:897
+msgid "Send a new e-mail"
+msgstr "Eine E-Mail versenden"
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php:34
+msgid "Send e-mails in name of groups"
+msgstr "E-Mails im Namen von Gruppen versenden"
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php:35
+msgid ""
+"Users with this privilege can send e-mails with a group where there are a "
+"member as sender."
+msgstr ""
+"Benutzer mit diesem Recht können E-Mails mit einer Gruppe, in der sie "
+"Mitglied sind, als Absender verschicken."
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php:38
+msgid "Group can be used as sender"
+msgstr "Gruppe kann als Absender benutzt werden"
+
+#: src/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php:39
+msgid ""
+"Assign this flag to groups which are supposed to be used as sender by users "
+"with the privilege \"Send e-mails in name of group\"."
+msgstr ""
+"Weisen Sie dieses Merkmal Gruppen zu, welche von Benutzer mit dem Recht \"E-"
+"Mails im Namen von Gruppen versenden\" als Absender genutzt werden können "
+"sollen."
+
+#: src/Stsbl/SendMailAsGroupBundle/EventListener/MenuListener.php:49
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:58
+msgid "Group e-mail"
+msgstr "Gruppen-E-Mail"
+
+#: src/Stsbl/SendMailAsGroupBundle/Entity/GroupMail.php:129
+msgid "(No subject)"
+msgstr "(Kein Betreff)"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:175
+msgid "Unexcpected error during sending e-mail. Please try again."
+msgstr ""
+"Unerwarter Fehler während des Versendes der E-Mail. Bitte versuchen Sie es "
+"erneut."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:341
+msgid "Subject"
+msgstr "Betreff"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:343
+msgid "Subject should not be empty."
+msgstr "Betreff sollte nicht leer sein."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:346
+msgid "Sender"
+msgstr "Absender"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:351
+msgid "Sender should not be empty."
+msgstr "Absender sollte nicht leer sein."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:355
+msgid "Select a group..."
+msgstr "Wählen Sie eine Gruppe aus..."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:359
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:110
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:123
+msgid "Recipients"
+msgstr "Empfänger"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:361
+msgid "Recipients should not be empty."
+msgstr "Empfänger sollten nicht leer sein."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:363
+msgid "Separate multiple recipients with a comma."
+msgstr "Trennen Sie mehrere Empfänger mit einem Komma."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:367
+msgid "Message"
+msgstr "Nachricht"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:369
+msgid "Message should not be empty."
+msgstr "Nachricht sollte nicht leer sein."
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:376
+msgid "Attachments"
+msgstr "Anhänge"
+
+#: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:388
+msgid "Send"
+msgstr "Senden"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:59
+msgid "E-mail"
+msgstr "E-Mail"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:109
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:122
+msgid "Title"
+msgstr "Titel"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:111
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:124
+msgid "Sending group"
+msgstr "Sendende Gruppe"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:112
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:125
+msgid "Date"
+msgstr "Datum"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:113
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:126
+msgid "Message text"
+msgstr "Nachrichtentext"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:114
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:127
+msgid "Attached files"
+msgstr "Angehängte Dateien"
+
+#: src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php:192
+msgid "All groups"
+msgstr "Alle Gruppen"

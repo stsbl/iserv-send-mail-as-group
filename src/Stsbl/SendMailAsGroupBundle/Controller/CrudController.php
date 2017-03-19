@@ -340,7 +340,7 @@ class CrudController extends BaseCrudController
             ->add('subject', TextType::class, [
                 'label' => _('Subject'),
                 'required' => true,
-                'constraints' => [new NotBlank(['message' => 'Subject should not be empty.'])],
+                'constraints' => [new NotBlank(['message' => _('Subject should not be empty.')])],
             ])
             ->add('group', EntityType::class, [
                 'label' => _('Sender'),
@@ -348,7 +348,7 @@ class CrudController extends BaseCrudController
                 'select2-icon' => 'legacy-act-group',
                 'multiple' => false,
                 'required' => false,
-                'constraints' => [new NotBlank(['message' => 'Sender should not be empty.'])],
+                'constraints' => [new NotBlank(['message' => _('Sender should not be empty.')])],
                 'by_reference' => false,
                 'choices' => $choices,
                 'attr' => [
@@ -358,7 +358,7 @@ class CrudController extends BaseCrudController
             ->add('recipients', TextType::class, [
                 'label' => _('Recipients'),
                 'required' => true,
-                'constraints' => [new NotBlank(['message' => 'Recipients should not be empty.'])],
+                'constraints' => [new NotBlank(['message' => _('Recipients should not be empty.')])],
                 'attr' => [
                     'help_text' => _('Separate multiple recipients with a comma.'),
                 ],
@@ -366,7 +366,7 @@ class CrudController extends BaseCrudController
             ->add('body', TextareaType::class, [
                 'label' => _('Message'),
                 'required' => true,
-                'constraints' => [new NotBlank(['message' => 'Message should not be empty.'])],
+                'constraints' => [new NotBlank(['message' => _('Message should not be empty.')])],
                 'attr' => [
                     'rows' => 20,
                 ],
