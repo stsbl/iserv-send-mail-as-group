@@ -70,7 +70,7 @@ msgstr "(Kein Betreff)"
 #: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:175
 msgid "Unexcpected error during sending e-mail. Please try again."
 msgstr ""
-"Unerwarter Fehler während des Versendes der E-Mail. Bitte versuchen Sie es "
+"Unerwarteter Fehler während des E-Mail-Versendens. Bitte versuchen Sie es "
 "erneut."
 
 #: src/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php:341
