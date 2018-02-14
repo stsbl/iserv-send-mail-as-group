@@ -158,7 +158,7 @@ sub check_path($) {
   my ($path) = @_;
   my $realpath = abs_path $path;
 
-  $realpath =~ /\/tmp\/mail-send-as-group\/(.*)/ or error "invalid file path!";
+  $realpath =~ /^\/tmp\/mail-send-as-group\/(.*)/ or error "invalid file path!";
 }
 
 sub req_auth {
