@@ -55,16 +55,9 @@ $grp = IServ::Valid::Group $grp;
 # get full names of user and group for logging
 my $grp_name = IServ::Tools::pwname $grp;
 my $login_name = IServ::Tools::pwname $login_act;
+my $domain = $conf->{Domain};
 
-# get server domain from iservcfg
-my $fn = "/var/lib/iserv/config/config.pm";
-my $domain = 'unassigned';
 undef %{ENV};
-
-if (-r $fn) {
-  require $fn;
-  $domain = $conf->{Domain};
-}
 
 sub chusr {
   my @groups = ();
@@ -121,7 +114,7 @@ sub send_mail {
 
   for (my $i = 0; $i lt @msg_recipients; $i++) {
     if ($i gt 0) {
-      $to .= '; ';
+      $to .= ', ';
     }
 
     $to .= $msg_recipients_display[$i].' <'.$msg_recipients[$i].'>';
