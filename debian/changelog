@@ -1,3 +1,18 @@
+stsbl-iserv-send-mail-as-group (18.02.16-1) experimental; urgency=medium
+
+  * Updated i18n.
+  * Updated build deps and rules.
+  * Fixed build deps.
+  * Fixed l10nFixed l10n..
+  * Removed entity backups
+  * Added license
+  * Updated copyright
+  * Added lintian overrides
+  * Separate mail addresses by comma instead of semicolon
+  * Improved realpath regex
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Fri, 16 Feb 2018 08:09:14 +0100
+
 stsbl-iserv-send-mail-as-group (17.03.11-0) experimental; urgency=medium
 
   [ Felix Jacobi ]
