@@ -2,14 +2,19 @@ Source: stsbl-iserv-send-mail-as-group
 Section: misc
 Priority: extra
 Maintainer: Stadtteilschule Blankenese <repository@stsbl.de>
-Build-Depends: debhelper (>= 10), iserv3-dev
-Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 10),
+Build-Depends-Indep: iserv3-dev
+Standards-Version: 4.1.3.0
 Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-send-mail-as-group
 
 Package: stsbl-iserv-send-mail-as-group
 Architecture: all
+Depends: ${misc:Depends},
+  ${perl:Depends},
+  iserv-portal,
+  libfile-mimeinfo-perl,
+  stsbl-iserv3-maintenance,
 Xb-Private-IServ-Revision: ${iserv:Revision}
-Depends: iserv-portal, stsbl-iserv3-maintenance, libfile-mimeinfo-perl
 Description: E-Mails im Namen einer Gruppe versenden für IServ 
  Erlaubt es ausgewählten Benutzern eine E-Mail mit der E-Mail-Adresse
  einer Gruppe in der sie Mitglied sind, zu versenden.
