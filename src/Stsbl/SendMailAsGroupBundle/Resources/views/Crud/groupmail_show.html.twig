@@ -1,4 +1,4 @@
-{# src/Stsbl/SendMailAsGroup/Resources/views/Crud/groupmail_show.html.twig #}
+{# src/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_show.html.twig #}
 {% extends 'IServCrudBundle:Crud:show.html.twig' %}
 
 {% block stylesheets %}
@@ -7,9 +7,7 @@
     {% if app.environment != 'prod' %}
         <!-- {{ _self }} => groupmail.css -->
     {% endif %}
-    {% stylesheets output='css/compiled/groupmail.css' '@StsblSendMailAsGroupBundle/Resources/public/css/groupmail.less' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/groupmail.css', 'stsbl-send-mail-as-group') }}" />
 {% endblock %}
 
 {% block content %}
