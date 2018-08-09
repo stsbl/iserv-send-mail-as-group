@@ -8,7 +8,7 @@ let webpackConfig = {
         'js/mail-as-group_autocomplete': './assets/js/mail-as-group_autocomplete.js',
         'js/mail-as-group_form': './assets/js/mail-as-group_form.js',
         'js/mail-as-group_scroll': './assets/js/mail-as-group_scroll.js',
-        'css/groupmail.css': './assets/less/groupmail.less',
+        'css/groupmail': './assets/less/groupmail.less',
     },
 };
 

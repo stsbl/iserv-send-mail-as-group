@@ -9,7 +9,7 @@
     {% if app.environment != 'prod' %}
         <!-- {{ _self }} => groupmail.css -->
     {% endif %}
-    <link rel="stylesheet" href="{{ asset('css/groupmail.css', 'stsbl-send-mail-as-group') }}" />
+    <link rel="stylesheet" href="{{ asset('css/groupmail.css', 'stsbl_send_mail_as_group') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -18,23 +18,23 @@
     {% if app.environment != 'prod' %}
 	<!-- {{ _self }} => mail-as-group_form.js -->
     {% endif %}
-    <link rel="stylesheet" href="{{ asset('js/mail-as-group_form.js', 'stsbl-send-mail-as-group') }}" />
+    <link rel="stylesheet" href="{{ asset('js/mail-as-group_form.js', 'stsbl_send_mail_as_group') }}" />
     
     {% if app.environment != 'prod' %}
 	<!-- {{ _self }} => mail-as-group_autocomplete.js -->
     {% endif %}
-    <link rel="stylesheet" href="{{ asset('js/mail-as-group_autocomplete.js', 'stsbl-send-mail-as-group') }}" />
+    <link rel="stylesheet" href="{{ asset('js/mail-as-group_autocomplete.js', 'stsbl_send_mail_as_group') }}" />
 
     {% if app.environment != 'prod' %}
 	<!-- {{ _self }} => mail-as-group_scroll.js -->
     {% endif %}
-    <link rel="stylesheet" href="{{ asset('js/mail-as-group_scroll.js', 'stsbl-send-mail-as-group') }}" />
+    <link rel="stylesheet" href="{{ asset('js/mail-as-group_scroll.js', 'stsbl_send_mail_as_group') }}" />
 {% endblock %}
 
 {% block content %}
     <div class="btn-toolbar container container-block">
         <div class="col-md-10"></div>
-        <div class="pull-right" id="groupmmail-jmp-btn-container">
+        <div class="pull-right" id="groupmail-jmp-btn-container">
             {{ crudm.linkButton(path('group_mail_index') ~ '#groupmail-compose-hook', _('Jump to compose e-mail'), 'circle-arrow-down', 'btn-link') }}
         </div>
     </div>
