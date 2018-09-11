@@ -1,3 +1,11 @@
+stsbl-iserv-send-mail-as-group (18.09.12-1) experimental; urgency=medium
+
+  * Updated packaging
+  * Moved to webpack
+  * Updated build rules for webpack support
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Wed, 12 Sep 2018 01:11:05 +0200
+
 stsbl-iserv-send-mail-as-group (18.02.16-3) experimental; urgency=medium
 
   * Updated debian files again
