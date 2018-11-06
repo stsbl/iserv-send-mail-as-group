@@ -1,7 +1,7 @@
 stsbl-iserv-send-mail-as-group (18.11.06-1) experimental; urgency=medium
 
   * Fixed assets
-  * Adapated to move of web application
+  * Adapted to move of web application
 
  -- Felix Jacobi <felix.jacobi@stsbl.de>  Tue, 06 Nov 2018 02:27:49 +0100
 
