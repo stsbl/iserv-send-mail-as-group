@@ -1,3 +1,9 @@
+stsbl-iserv-send-mail-as-group (18.11.06-1+1~testing) experimental; urgency=medium
+
+  * Revert "Adapated to move of web application"
+
+ -- Felix Jacobi <felix.jacobi@stsbl.de>  Tue, 06 Nov 2018 19:31:43 +0100
+
 stsbl-iserv-send-mail-as-group (18.11.06-1) experimental; urgency=medium
 
   * Fixed assets
