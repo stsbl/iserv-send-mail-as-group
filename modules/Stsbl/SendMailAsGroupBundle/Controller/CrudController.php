@@ -3,23 +3,23 @@
 namespace Stsbl\SendMailAsGroupBundle\Controller;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType;
-use Doctrine\ORM\NoResultException;
-use IServ\CrudBundle\Controller\CrudController as BaseCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use IServ\AddressbookBundle\Service\Addressbook;
+use IServ\CrudBundle\Controller\StrictCrudController as BaseCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Stsbl\SendMailAsGroupBundle\Security\Privilege;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /*
@@ -79,13 +79,11 @@ class CrudController extends BaseCrudController
     }
     
     /**
-     * @Route("groupmail/lookup", name="group_mail_autocomplete", options={"expose" = true})
+     * @Route("/groupmail/lookup", name="group_mail_autocomplete", options={"expose" = true}, methods={"GET"})
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
-     * @Method("GET")
-     * @param Request $request
      * @return JsonResponse
      */
-    public function lookupAction(Request $request)
+    public function lookupAction(Request $request, Addressbook $addressbook)
     {
         // Get query from request
         $query = $request->query->get('query');
@@ -97,9 +95,7 @@ class CrudController extends BaseCrudController
         $result =  [];
 
         if (null !== $search && '' != $query) {
-            /* @var $al \IServ\AddressbookBundle\Service\Addressbook */
-            $al = $this->get('iserv.addressbook');
-            $result = $al->lookup($search, $excludeLists);
+            $result = $addressbook->lookup($search, $excludeLists);
             
             $originalQuery = implode(', ', $explodedQuery);
             $i = 0;
@@ -119,24 +115,22 @@ class CrudController extends BaseCrudController
         
     /**
      * Sends an e-mail in background
-     * 
+     *
+     * @Route("/groupmail/send", name="group_mail_send", options={"expose": true}, methods={"POST"})
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
-     * @Route("groupmail/send", name="group_mail_send", options={"expose": true})
-     * @Method("POST")
-     * @param Request $request
      * @return JsonResponse
      */
     public function sendAction(Request $request)
     {
         if (!$request->isXmlHttpRequest()) {
-            throw new \RuntimeException('Only XmlHttpRequests are supported.');
+            throw new BadRequestHttpException('Only XML HTTP requests are supported.');
         }
         
         $form = $this->getForm();
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $ret = $this->sendMail($form, $request);
+            $ret = $this->sendMail($form);
             
             $errors = $ret['errors'];
             $success = $ret['success'];
@@ -174,13 +168,12 @@ class CrudController extends BaseCrudController
             if  ($errors->count() < 1) {
                 $jsonErrors[] = ['type' => 'error', 'message' => _('Unexcpected error during sending e-mail. Please try again.')];
             } else {
-       
                 foreach ($errors as $error) {
                     /* @var $error \Symfony\Component\Form\FormError */
                     $message = $error->getMessage();
                 
                     if (!empty($message)) {
-                    $jsonErrors[] = ['type' => 'error', 'message' => _($message)];
+                        $jsonErrors[] = ['type' => 'error', 'message' => _($message)];
                     }
                 }
             }
@@ -191,10 +184,9 @@ class CrudController extends BaseCrudController
     
     /**
      * Check if a group has the mail_ext privilege
-     * 
+     *
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
-     * @Route("groupmail/mailext", name="group_mail_lookup_priv", options={"expose": true})
-     * @Method("GET")
+     * @Route("groupmail/mailext", name="group_mail_lookup_priv", options={"expose": true}, methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -219,16 +211,16 @@ class CrudController extends BaseCrudController
         /* @var $groups \IServ\CoreBundle\Entity\Group[] */
         if ($type === 'priv') {
             $groups = $er->findByPrivilege('PRIV_MAIL_EXT');
-        } else if ($type === 'flag') {
+        } elseif ($type === 'flag') {
             $groups = $er->findByFlag('mail_ext');
-        } else if ($type === 'flag_internal') {
+        } elseif ($type === 'flag_internal') {
             // Support for stsbl-iserv-mail-config
             // Only enable it if the flag exists
             $fr = $this->getDoctrine()->getRepository('IServCoreBundle:GroupFlag');
             $flag = $fr->find('mail_int');
             
             // skip if not supported
-            if(is_null($flag)) {
+            if (null === $flag) {
                 $ret = true;
                 goto response;
             } else {
@@ -236,8 +228,8 @@ class CrudController extends BaseCrudController
             }
         }
         
-        if (count($groups) < 1) {
-            throw new NoResultException();
+        if (empty($groups)) {
+            throw $this->createNotFoundException('No groups found!');
         }
         
         foreach ($groups as $group) {
@@ -258,61 +250,53 @@ class CrudController extends BaseCrudController
     
     /**
      * Downloads an attachment
-     * 
+     *
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
-     * @Route("groupmail/download/{messageid}/{attachmentid}", name="group_mail_download")
-     * @Method("GET")
-     * @param Request $request
-     * @param integer $messageId
-     * @param integer $attachmentId
+     * @Route("/groupmail/download/{messageid}/{attachmentid}", name="group_mail_download", methods={"GET"})
      * @return Response
      */
-    public function downloadAction(Request $request, $messageid, $attachmentid)
+    public function downloadAction(int $messageid, int $attachmentid)
     {
-        try {
-            $groupRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMail');
-            /* @var $mail \Stsbl\SendMailAsGroupBundle\Entity\GroupMail */
-            $mail = $groupRepo->find($messageid);
-            
-            if (is_null($mail)) {
-                throw new NoResultException();
-            }
-            
-            if (!$this->getUser()->hasGroup($mail->getSender())) {
-                throw $this->createAccessDeniedException('You are not allowed to view content of this message.');
-            }
-        
-            $fileRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMailFile');
-            /* @var $file \Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile */
-            $file = $fileRepo->findOneBy(['id' => $attachmentid]);
-            
-            if (is_null($file)) {
-                throw new NoResultException();
-            }
-        
-            if ($file->getMail() !== $mail) {
-                throw $this->createAccessDeniedException('Supplied message does not fit to attachment.');
-            }
-        
-            $quoted = sprintf('"%s"', addcslashes($file->getName(), '"\\'));
-            
-            $fileName = sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $file->getId(), $file->getName());        
-            $fileObject = new \SplFileObject($fileName, "r");
-            $fileContents = $fileObject->fread($fileObject->getSize());
-            
-            $response = new Response($fileContents);
-            $response->headers->set('Content-Type', $file->getMime());
-            $response->headers->set('Content-Disposition', 'attachment; filename='.$quoted);
-        
-            return $response;
-        } catch (NoResultException $e) {
-            throw $this->createNotFoundException(sprintf('No result found: %s', $e->getMessage()));
+        $groupRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMail');
+        /* @var $mail \Stsbl\SendMailAsGroupBundle\Entity\GroupMail */
+        $mail = $groupRepo->find($messageid);
+
+        if (null === $mail) {
+            throw $this->createNotFoundException('No mail found.');
         }
+
+        if (!$this->getUser()->hasGroup($mail->getSender())) {
+            throw $this->createAccessDeniedException('You are not allowed to view content of this message.');
+        }
+
+        $fileRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMailFile');
+        /* @var $file \Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile */
+        $file = $fileRepo->findOneBy(['id' => $attachmentid]);
+
+        if (null === $file) {
+            throw $this->createNotFoundException('No file found.');
+        }
+
+        if ($file->getMail() !== $mail) {
+            throw $this->createAccessDeniedException('Supplied message does not fit to attachment.');
+        }
+
+        $quoted = sprintf('"%s"', addcslashes($file->getName(), '"\\'));
+
+        $fileName = sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $file->getId(), $file->getName());
+        $fileObject = new \SplFileObject($fileName, "r");
+        $fileContents = $fileObject->fread($fileObject->getSize());
+
+        $response = new Response($fileContents);
+        $response->headers->set('Content-Type', $file->getMime());
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$quoted);
+
+        return $response;
     }
     
     /**
      * Get a form to compose a new e-mail
-     * 
+     *
      * @return Form
      */
     private function getForm()
@@ -397,12 +381,11 @@ class CrudController extends BaseCrudController
     /**
      * Prepares sending of an e-mail with the given data of the supplied form.
      * Returns the messages from mail_send_as_group as array.
-     * 
+     *
      * @param Form $form
-     * @param Request $request
      * @return array
      */
-    private function sendMail(Form $form, Request $request)
+    private function sendMail(Form $form)
     {
         $data = $form->getData();
         $randomNumber = rand(1000, getrandmax());
@@ -421,8 +404,9 @@ class CrudController extends BaseCrudController
             $this->filesystem->mkdir($dir);
             
             $msgFile = $dir.'content.txt';
-            $this->filesystem->dumpFile($msgFile, $data['body'], 664); 
-            
+            $this->filesystem->dumpFile($msgFile, $data['body']);
+
+            /** @var UploadedFile[] $uploadedFiles */
             $uploadedFiles = $data['attachments'];
             
             if (count($uploadedFiles) > 0) {
