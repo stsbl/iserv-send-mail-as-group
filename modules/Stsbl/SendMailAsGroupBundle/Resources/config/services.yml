@@ -1,19 +1,15 @@
-# src/Stsbl/SendMailAsGroupBundle/Resources/config/services.yml
 services:
-    stsbl.sendmailsasgroup.crud.groupmail:
-        class: Stsbl\SendMailAsGroupBundle\Crud\GroupMailCrud # Our CRUD class
-        arguments: [Stsbl\SendMailAsGroupBundle\Entity\GroupMail]  # Sets the controlled entity class
-        calls:
-            - [setEntityManager, ["@doctrine.orm.entity_manager"]] 
-        tags:
-            - { name: iserv.crud } # Tells IServ about our CRUD
-            
-    stsbl.sendmailsasgroup.menu:
-        class: Stsbl\SendMailAsGroupBundle\EventListener\MenuListener # Out MenuListener Class
-        tags:
-          - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu } # Tells IServ about the main menu method
-          
-    stsbl.sendmailsasgroup.service.send:
-        class: Stsbl\SendMailAsGroupBundle\Service\SendMailAsGroup
-        arguments: ["@iserv.shell", "@iserv.security_handler", "@iserv.config"]
+    _defaults:
+        autoconfigure: true
+        autowire: true
+        public: false
+
+    Stsbl\SendMailAsGroupBundle\:
+        resource: '../../*'
+        exclude: '../../{Entity,Resources,Tests}'
+
+    Stsbl\SendMailAsGroupBundle\Controller\:
+        public: true
+        resource: '../../Controller/*'
+        tags: ['controller.service_arguments']
         

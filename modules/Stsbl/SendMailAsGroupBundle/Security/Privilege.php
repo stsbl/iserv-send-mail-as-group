@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Privilege.php
+
 namespace Stsbl\SendMailAsGroupBundle\Security;
 
 /*

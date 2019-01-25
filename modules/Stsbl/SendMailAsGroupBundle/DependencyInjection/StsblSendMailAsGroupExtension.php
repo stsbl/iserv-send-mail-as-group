@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/DependencyInjection/StsblSendMailAsGroupExtension.php
+
 namespace Stsbl\SendMailAsGroupBundle\DependencyInjection;
 
 use IServ\CoreBundle\DependencyInjection\IServBaseExtension;

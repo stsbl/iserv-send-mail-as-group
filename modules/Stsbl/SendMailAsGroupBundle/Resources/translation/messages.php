@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php
+
 
 /* 
  * The MIT License

@@ -1,8 +1,9 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Service/SendMailAsGroup.php
+
 namespace Stsbl\SendMailAsGroupBundle\Service;
 
 use IServ\CoreBundle\Entity\Group;
+use IServ\CoreBundle\Exception\ShellExecException;
 use IServ\CoreBundle\Security\Core\SecurityHandler;
 use IServ\CoreBundle\Service\Config;
 use IServ\CoreBundle\Service\Shell;
@@ -52,14 +53,14 @@ class SendMailAsGroup
     private $securityHandler;
     
     /**
-     * @var Config     
+     * @var Config
      */
     private $config;
 
     /**
      * The constructor
      */
-    public function __construct(Shell $shell, SecurityHandler $securityHandler, Config $config) 
+    public function __construct(Shell $shell, SecurityHandler $securityHandler, Config $config)
     {
         $this->shell = $shell;
         $this->securityHandler = $securityHandler;
@@ -68,18 +69,20 @@ class SendMailAsGroup
     
     /**
      * Sends an e-mail with the given group as sender
-     * 
-     * @param Group $group
-     * @param array $recipients
-     * @param string $msgTitle
-     * @param string $contentFile
-     * @param array $attachments
+     *
+     * @param string[] $recipients
+     * @param string[] $attachments
      */
-    public function send(Group $group, array $recipients, $msgTitle, $contentFile, array $attachments = null)
-    {
-        $ip = @$_SERVER["REMOTE_ADDR"];
-        $fwdIp = preg_replace("/.*,\s*/", "", @$_SERVER["HTTP_X_FORWARDED_FOR"]);
-        $act = $this->securityHandler->getUser()->getUsernameForActAdm();
+    public function send(
+        string $ip,
+        ?string $fwdIp,
+        Group $group,
+        array $recipients,
+        string $msgTitle,
+        string $contentFile,
+        array $attachments = null
+    ): void {
+        $act = $this->securityHandler->getUser()->getUsername();
         $groupAct = $group->getAccount();
         $sessionPassword = $this->securityHandler->getSessionPassword();
         
@@ -88,10 +91,10 @@ class SendMailAsGroup
         
         // split e-mail address information
         foreach ($recipients as $recipient) {
-            $address = imap_rfc822_parse_adrlist($recipient, $this->config->get('Servername'));
+            $address = imap_rfc822_parse_adrlist($recipient, $this->config->get('Domain'));
             
             if (!is_array($address) || count($address) !== 1) {
-                throw new \RuntimeExecption('Invalid result during e-mail address parsing.');
+                throw new \RuntimeException('Invalid result during e-mail address parsing.');
             }
             
             $mergedAddress = sprintf('%s@%s', $address[0]->mailbox, $address[0]->host);
@@ -116,35 +119,45 @@ class SendMailAsGroup
         
         // set LC_ALL to a translation with utf-8 to prevent destroying umlauts
         $environment = ['LC_ALL' => 'en_US.UTF-8', 'IP' => $ip, 'IPFWD' => $fwdIp, 'SESSPW' => $sessionPassword];
-        $this->shell->exec('closefd', ['sudo', self::COMMAND, $act, $groupAct, $recipientArg, $recipientDisplayArg, $msgTitle, $contentFile, $attachmentsArg], null, $environment);
+        try {
+            $this->shell->exec(
+                'sudo',
+                [
+                    self::COMMAND, $act, $groupAct, $recipientArg, $recipientDisplayArg, $msgTitle, $contentFile,
+                    $attachmentsArg
+                ],
+                null,
+                $environment
+            );
+        } catch (ShellExecException $e) {
+            throw new \RuntimeException('Failed to execute mail_send_as_group', 0, $e);
+        }
     }
 
     /**
      * Gets output
-     * 
-     * @return array
+     *
+     * @return string[]
      */
-    public function getOutput()
+    public function getOutput(): array
     {
         return $this->shell->getOutput();
     }
     
     /**
      * Gets error output
-     * 
-     * @return array
+     *
+     * @return string[]
      */
-    public function getError()
+    public function getError(): array
     {
         return $this->shell->getError();
     }
     
     /**
      * Gets exit code of last executed command
-     * 
-     * @return integer
      */
-    public function getExitCode()
+    public function getExitCode(): int
     {
         return $this->shell->getExitCode();
     }

@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Stsbl/SendMailAsGroupBundle.php
+
 namespace Stsbl\SendMailAsGroupBundle;
 
 use IServ\CoreBundle\Routing\AutoloadRoutingBundleInterface;

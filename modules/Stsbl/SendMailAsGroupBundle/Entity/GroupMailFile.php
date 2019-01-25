@@ -1,5 +1,5 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Entity/GroupMail.php
+
 namespace Stsbl\SendMailAsGroupBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

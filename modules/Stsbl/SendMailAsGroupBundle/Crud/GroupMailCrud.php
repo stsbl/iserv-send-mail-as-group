@@ -1,15 +1,17 @@
 <?php
-// src/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+
 namespace Stsbl\SendMailAsGroupBundle\Crud;
 
-use Doctrine\ORM\EntityManager;
+use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\Specification\GroupsMembershipSpecification;
 use IServ\CrudBundle\Crud\AbstractCrud;
+use IServ\CrudBundle\Doctrine\ORM\ORMObjectManager;
 use IServ\CrudBundle\Entity\CrudInterface;
 use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
-use IServ\CrudBundle\Table\ListHandler;
 use IServ\CrudBundle\Table\Filter;
+use IServ\CrudBundle\Table\ListHandler;
+use Stsbl\SendMailAsGroupBundle\Entity\GroupMail;
 use Stsbl\SendMailAsGroupBundle\Security\Privilege;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -45,42 +47,31 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class GroupMailCrud extends AbstractCrud
 {
-    /**
-     * @var EntityManager 
-     */
-    private $em;
+    public function __construct()
+    {
+        parent::__construct(GroupMail::class);
+    }
 
     /**
      * {@inheritdoc}
      */
-    protected function configure() 
+    protected function configure()
     {
         $this->title = _('Group e-mail');
         $this->itemTitle = _('E-mail');
         $this->id = 'group_mail';
         // set to empty to remove crud prefix
         $this->routesNamePrefix = '';
-        $this->routesPrefix = 'groupmail';
         $this->templates['crud_index'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_index.html.twig';
         $this->templates['crud_show'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_show.html.twig';
     }
-    
-    /**
-     * Set EntityManager
-     * 
-     * @param EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-    
+
     /* Disallow adding and editing of items */
     
     /**
      * {@inheritdoc}
      */
-    public function isAllowedToAdd(UserInterface $user = null) 
+    public function isAllowedToAdd(UserInterface $user = null)
     {
         return false;
     }
@@ -88,7 +79,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function isAllowedToEdit(CrudInterface $object = null, UserInterface $user = null) 
+    public function isAllowedToEdit(CrudInterface $object = null, UserInterface $user = null)
     {
         return false;
     }
@@ -96,7 +87,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function isAllowedToDelete(CrudInterface $object = null, UserInterface $user = null) 
+    public function isAllowedToDelete(CrudInterface $object = null, UserInterface $user = null)
     {
         return false;
     }
@@ -104,7 +95,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function configureListFields(ListMapper $listMapper) 
+    public function configureListFields(ListMapper $listMapper)
     {
         $listMapper->addIdentifier('messageTitle', null, ['label' => _('Title')]);
         $listMapper->add('recipients', null, ['label' => _('Recipients')]);
@@ -117,7 +108,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function configureShowFields(ShowMapper $showMapper) 
+    public function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper->add('messageTitle', null, ['label' => _('Title')]);
         $showMapper->add('recipients', null, ['label' => _('Recipients')]);
@@ -130,74 +121,53 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function getRoutePattern($action, $id, $entityBased = true)
+    public function getRouteIdentifier()
     {
-        // Overwrite broken route generation of Crud (WHY? =()
-        if ('index' === $action) {
-            return sprintf('%s', $this->routesPrefix);
-        } else if ('add' === $action) {
-            return sprintf('%s/%s', $this->routesPrefix, $action);
-        } else if ('batch' === $action) {
-            return sprintf('%s/%s', $this->routesPrefix, $action);
-        } else if ('batch/confirm' === $action) {
-            return sprintf('%s%s/%s', $this->routesPrefix, 'batch', 'confirm');
-        } else if ('show' === $action) {
-            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
-        } else if ('edit' === $action) {
-            return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
-        } else if ('delete' === $action) {
-           return sprintf('%s/%s/%s', $this->routesPrefix, $action, '{id}');
-        }
+        return 'groupmail';
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureListFilter(ListHandler $listHandler)
     {
-        /* @var $qb \Doctrine\ORM\QueryBuilder */
-        $qb = $this->getObjectManager()->createQueryBuilder($this->class);
+        /** @var ORMObjectManager $om */
+        $om = $this->getObjectManager();
+
+        $qb = $om->createQueryBuilder($this->class);
         
         $qb
             ->select('p')
             ->from('StsblSendMailAsGroupBundle:GroupMail', 'p')
         ;
-        
+
         /* @var $groupRepository \IServ\CoreBundle\Entity\GroupRepository */
-        $groupRepository = $this->em->getRepository('IServCoreBundle:Group');
+        $groupRepository = $om->getRepository(Group::class);
         
         /* @var $groups \IServ\CoreBundle\Entity\Group[] */
         $groups = $groupRepository->findByFlag(Privilege::FLAG_USEABLE_AS_SENDER);
         $groupsWithUser = [];
         $user = $this->getUser();
         
-        foreach ($groups as $g) {
-            if ($g->hasUser($user)) {
-                $groupsWithUser[] = $g;
+        foreach ($groups as $group) {
+            if ($group->hasUser($user)) {
+                $groupsWithUser[] = $group;
             }
         }
-        
-        $i = 1;
-        foreach ($groupsWithUser as $g) {
-            $string = sprintf('p.sender = \'%s\'', $g->getAccount());
-            if ($i === 1) {
-                $qb->where($string);
-            } else {
-                $qb->orWhere($string);
-            }
 
-            $i++;
+        foreach ($groupsWithUser as $group) {
+            $qb->orWhere($qb->expr()->eq('p.sender', $qb->expr()->literal($group->getAccount())));
         }
         
         $allFilter = new Filter\ListExpressionFilter(_('All groups'), $qb->expr()->exists($qb));
         $allFilter->setName('all_groups');
         
         $filters = [];
-        foreach ($groupsWithUser as $g) {
-            $filter = new Filter\ListExpressionFilter((string)$g, 'parent.sender = :group');
+        foreach ($groupsWithUser as $group) {
+            $filter = new Filter\ListExpressionFilter((string)$group, 'parent.sender = :group');
             $filter
-                ->setName('group_'.$g->getAccount())
-                ->setParameters(['group' => $g])
+                ->setName('group_'.$group->getAccount())
+                ->setParameters(['group' => $group])
             ;
             
             $filters[] = $filter;
@@ -217,7 +187,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    protected function buildRoutes() 
+    protected function buildRoutes()
     {
         parent::buildRoutes();
         
@@ -235,7 +205,7 @@ class GroupMailCrud extends AbstractCrud
     /**
      * {@inheritdoc}
      */
-    public function getFilterSpecification() 
+    public function getFilterSpecification()
     {
         return new GroupsMembershipSpecification('sender', $this->getUser());
     }
