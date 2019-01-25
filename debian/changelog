@@ -1,3 +1,10 @@
+stsbl-iserv-send-mail-as-group (19.01.25-1) experimental; urgency=medium
+
+  * Removed legacy CrudController and Route annotation usage
+  * Resolved deprecations
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Fri, 25 Jan 2019 01:28:54 +0100
+
 stsbl-iserv-send-mail-as-group (18.11.25-1) experimental; urgency=medium
 
   * Rebuilt
