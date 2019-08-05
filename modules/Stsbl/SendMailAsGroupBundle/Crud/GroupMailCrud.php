@@ -11,6 +11,7 @@ use IServ\CrudBundle\Mapper\ListMapper;
 use IServ\CrudBundle\Mapper\ShowMapper;
 use IServ\CrudBundle\Table\Filter;
 use IServ\CrudBundle\Table\ListHandler;
+use Stsbl\SendMailAsGroupBundle\Controller\CrudController;
 use Stsbl\SendMailAsGroupBundle\Entity\GroupMail;
 use Stsbl\SendMailAsGroupBundle\Security\Privilege;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -191,7 +192,7 @@ class GroupMailCrud extends AbstractCrud
     {
         parent::buildRoutes();
         
-        $this->routes[self::ACTION_INDEX]['_controller'] = 'StsblSendMailAsGroupBundle:Crud:index';
+        $this->routes[self::ACTION_INDEX]['_controller'] = CrudController::class . '::indexAction';
     }
     
     /**
