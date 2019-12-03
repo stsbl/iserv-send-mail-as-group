@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Stsbl\SendMailAsGroupBundle\Service;
 
@@ -38,7 +39,7 @@ use IServ\CoreBundle\Service\Shell;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/liceneses/MIT>
  */
-class SendMailAsGroup 
+final class SendMailAsGroup
 {
     const COMMAND = '/usr/lib/iserv/mail_send_as_group';
     
@@ -80,7 +81,7 @@ class SendMailAsGroup
         array $recipients,
         string $msgTitle,
         string $contentFile,
-        array $attachments = null
+        ?array $attachments = null
     ): void {
         $act = $this->securityHandler->getUser()->getUsername();
         $groupAct = $group->getAccount();
@@ -110,7 +111,8 @@ class SendMailAsGroup
         
         $recipientArg = implode(',', $recipientAddresses);
         $recipientDisplayArg = implode(',', $recipientDisplay);
-        if (count($attachments) > 0) {
+
+        if (!empty($attachments ?? [])) {
             $attachmentsArg = implode(',', $attachments);
         } else {
             // only scalars are allowed

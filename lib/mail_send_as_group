@@ -141,9 +141,9 @@ sub send_mail {
     my $basename = File::Basename::basename $attachment or error "failed to get basename: $!";
 
     $part = MIME::Lite->new(
-	Type  => $mimetype,
-	Path  => $attachment,
-    	Filename => $basename,
+      Type  => $mimetype,
+      Path  => $attachment,
+      Filename => $basename,
     );
 
     $part->attr('content-disposition' => 'attachment');
