@@ -90,7 +90,7 @@ class CrudController extends BaseCrudController
         // Get query from request
         $query = $request->query->get('query');
         $explodedQuery = explode(',', $query);
-        
+
         // only search for last element
         $search = trim(array_pop($explodedQuery));
         $excludeLists = true;
@@ -100,11 +100,11 @@ class CrudController extends BaseCrudController
             $result = $addressbook->lookup($search, $excludeLists);
             
             $originalQuery = implode(', ', $explodedQuery);
-            
-            foreach ($result as $row) {
+
+            foreach ($result as &$row) {
                 // append result to original query
-                if (count($explodedQuery) > 0) {
-                    $row['value'] = $originalQuery . ', '.$row['value'];
+                if (!empty($explodedQuery)) {
+                    $row['value'] = $originalQuery . ', '. $row['value'];
                 }
             }
         }

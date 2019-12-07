@@ -1,4 +1,7 @@
-/* 
+import Autocomplete from 'IServ.Autocomplete';
+import Routing from 'IServ.Routing';
+
+/*
  * The MIT License
  *
  * Copyright 2019 Felix Jacobi.
@@ -21,14 +24,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-IServ.SendMailAsGroup.Autocomplete = IServ.register(function(IServ) {
+
+(function () {
     "use strict";
 
-    var thOptionsAddress = {
+    const thOptionsAddress = {
         minLength: 1
     };
-    var thSourceAddress = {
-    	remote: IServ.Routing.generate('group_mail_autocomplete') + '?query=%QUERY',
+
+    const thSourceAddress = {
+        remote: Routing.generate('group_mail_autocomplete') + '?query=%QUERY',
         templates: {
             suggestion: IServ.Autocomplete.render
         }
@@ -36,12 +41,8 @@ IServ.SendMailAsGroup.Autocomplete = IServ.register(function(IServ) {
 
     function initialize()
     {
-    	IServ.Autocomplete.make($('#compose_group_mail_recipients'), thSourceAddress, thOptionsAddress);
+        Autocomplete.make($('#compose_group_mail_recipients'), thSourceAddress, thOptionsAddress);
     }
 
-    // Public API
-    return {
-        init: initialize
-    };
-
-}(IServ));
+    $(document).ready(initialize);
+}());
