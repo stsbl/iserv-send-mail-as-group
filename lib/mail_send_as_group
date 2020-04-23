@@ -53,8 +53,10 @@ $login_pwd = IServ::Valid::Passwd $login_pwd;
 $grp = IServ::Valid::Group $grp;
 
 # get full names of user and group for logging
-my $grp_name = IServ::Tools::pwname $grp;
-my $login_name = IServ::Tools::pwname $login_act;
+my $grp_name = IServ::DB::SelectVal "SELECT name FROM groups WHERE act = ?", $grp;
+my $login_name = IServ::DB::SelectVal
+    "SELECT user_join_name(firstname, lastname) FROM users WHERE act = ?",
+    $login_act;
 my $domain = $conf->{Domain};
 
 undef %{ENV};
