@@ -1,0 +1,159 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-02 01:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: modules/Stsbl/SendMailAsGroupBundle/Entity/GroupMail.php
+msgid "(No subject)"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "All groups"
+msgstr ""
+
+#: priv/mail-send-as-group
+#: modules/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php
+msgid ""
+"Assign this flag to groups which are supposed to be used as sender by users "
+"with the privilege \"Send e-mails in name of group\"."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "Attached files"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Attachments"
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_index.html.twig.php
+msgid ""
+"Below you can search for e-mails which were send in the past in name of the "
+"groups where you are a member."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "Date"
+msgstr ""
+
+#: priv/mail-send-as-group
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "E-mail"
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_index.html.twig.php
+msgid "E-mail archive"
+msgstr ""
+
+#: priv/mail-send-as-group
+#: modules/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php
+msgid "Group can be used as sender"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+#: modules/Stsbl/SendMailAsGroupBundle/EventListener/MenuListener.php
+msgid "Group e-mail"
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_index.html.twig.php
+msgid "Jump to compose e-mail"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Message"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Message should not be empty."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "Message text"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Recipients"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Recipients should not be empty."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Select a group..."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Send"
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_index.html.twig.php
+msgid "Send a new e-mail"
+msgstr ""
+
+#: priv/mail-send-as-group
+#: modules/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php
+msgid "Send e-mails in name of groups"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Sender"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Sender should not be empty."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "Sending group"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Separate multiple recipients with a comma."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Subject"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Subject should not be empty."
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/Crud/groupmail_index.html.twig.php
+msgid "The e-mail will stored in the mail archive after sending."
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
+msgid "Title"
+msgstr ""
+
+#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+msgid "Unexcpected error during sending e-mail. Please try again."
+msgstr ""
+
+#: priv/mail-send-as-group
+#: modules/Stsbl/SendMailAsGroupBundle/Resources/translation/messages.php
+msgid ""
+"Users with this privilege can send e-mails with a group where there are a "
+"member as sender."
+msgstr ""
+
+#: /tmp/twig2php-stsbl-iserv-send-mail-as-group/modules/Stsbl/SendMailAsGroupBundle/Resources/views/macros.html.twig.php
+msgid "none"
+msgstr ""
