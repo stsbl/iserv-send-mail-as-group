@@ -1,3 +1,10 @@
+stsbl-iserv-send-mail-as-group (20.08.02-1) testing; urgency=medium
+
+  * Bumped copyright
+  * Updated locale handling to use genpo
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sun, 02 Aug 2020 07:33:33 +0200
+
 stsbl-iserv-send-mail-as-group (20.04.23-1) stable; urgency=medium
 
   * Fixed usage of no longer existing pwname in IServ::Tools
