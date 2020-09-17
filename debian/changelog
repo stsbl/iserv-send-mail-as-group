@@ -1,3 +1,10 @@
+stsbl-iserv-send-mail-as-group (20.09.17-1) stable; urgency=medium
+
+  * Updated license copyright
+  * Fixed typo and disabled CRUD export
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Thu, 17 Sep 2020 06:39:42 +0200
+
 stsbl-iserv-send-mail-as-group (20.08.02-1) testing; urgency=medium
 
   * Bumped copyright
