@@ -65,6 +65,7 @@ class GroupMailCrud extends AbstractCrud
         $this->routesNamePrefix = '';
         $this->templates['crud_index'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_index.html.twig';
         $this->templates['crud_show'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_show.html.twig';
+        $this->options['export'] = false;
     }
 
     /* Disallow adding and editing of items */

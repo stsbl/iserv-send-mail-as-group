@@ -45,4 +45,4 @@ import Routing from 'IServ.Routing';
     }
 
     $(document).ready(initialize);
-}());
+})();
