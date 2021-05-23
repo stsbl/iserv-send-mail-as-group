@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CrudBundle\Entity\CrudInterface;
@@ -46,172 +49,134 @@ class GroupMail implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @ORM\Column(name="msg_title", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $messageTitle;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="\IServ\CoreBundle\Entity\Group", fetch="EAGER")
      * @ORM\JoinColumn(name="sender", referencedColumnName="act", onDelete="CASCADE")
      * @Assert\NotBlank()
-     * 
+     *
      * @var Group
      */
     private $sender;
-    
+
     /**
      * @ORM\Column(name="msg_body", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $messageBody;
-    
+
     /**
      * @ORM\Column(name="time", type="datetime", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var \DateTime
      */
     private $date;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="GroupMailRecipient", mappedBy="mail")
-     * 
-     * @var ArrayCollection
+     *
+     * @var GroupMailRecipient[]&Collection
      */
     private $recipients;
 
     /**
      * @ORM\OneToMany(targetEntity="GroupMailFile", mappedBy="mail")
-     * 
-     * @var ArrayCollection
+     *
+     * @var GroupMailFile[]&Collection
      */
     private $files;
-    
+
+    public function __construct()
+    {
+        $this->recipients = new ArrayCollection();
+        $this->files = new ArrayCollection();
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function __toString() 
+    public function __toString()
     {
         return $this->getMessageTitleDisplay();
     }
-    
-    /**
-     * Get id
-     * 
-     * @return integer
-     */
-    public function getId() 
+
+    public function getId(): ?int
     {
         return $this->id;
     }
-    
-    /**
-     * Gets a displayable title
-     * 
-     * @return string
-     */
-    public function getMessageTitleDisplay()
+
+    public function getMessageTitleDisplay(): string
     {
-        if (!empty($this->messageTitle)) {
+        if ($this->messageTitle !== null && $this->messageTitle !== '') {
             return $this->messageTitle;
-        } else {
-            return _('(No subject)');
         }
+
+        return _('(No subject)');
     }
 
     /* Generated getters and setters */
-    
+
     /**
-     * Set messageTitle
-     *
-     * @param string $messageTitle
-     *
-     * @return GroupMail
+     * @return $this
      */
-    public function setMessageTitle($messageTitle)
+    public function setMessageTitle(?string $messageTitle): self
     {
         $this->messageTitle = $messageTitle;
 
         return $this;
     }
 
-    /**
-     * Get messageTitle
-     *
-     * @return string
-     */
-    public function getMessageTitle()
+    public function getMessageTitle(): ?string
     {
         return $this->messageTitle;
     }
 
     /**
-     * Set sender
-     *
-     * @param Group $sender
-     *
-     * @return GroupMail
+     * @return $this
      */
-    public function setSender(Group $sender)
+    public function setSender(?Group $sender): self
     {
         $this->sender = $sender;
 
         return $this;
     }
 
-    /**
-     * Get sender
-     *
-     * @return Group
-     */
-    public function getSender()
+    public function getSender(): ?Group
     {
         return $this->sender;
     }
 
-    /**
-     * Set messageBody
-     *
-     * @param string $messageBody
-     *
-     * @return GroupMail
-     */
-    public function setMessageBody($messageBody)
+    public function setMessageBody(?string $messageBody): self
     {
         $this->messageBody = $messageBody;
 
         return $this;
     }
 
-    /**
-     * Get messageBody
-     *
-     * @return string
-     */
-    public function getMessageBody()
+    public function getMessageBody(): ?string
     {
         return $this->messageBody;
     }
 
     /**
-     * Set date
-     *
-     * @param \DateTime $date
-     *
-     * @return GroupMail
+     * @return $this
      */
-    public function setDate($date)
+    public function setDate(?\DateTime $date): self
     {
         $this->date = $date;
 
@@ -223,61 +188,45 @@ class GroupMail implements CrudInterface
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
-    
-    /**
-     * The constructor.
-     */
-    public function __construct()
-    {
-        $this->recipients = new ArrayCollection();
-    }
 
     /**
-     * Add recipient
-     *
-     * @param GroupMailRecipient $recipient
-     *
-     * @return GroupMail
+     * @return $this
      */
-    public function addRecipient(GroupMailRecipient $recipient)
+    public function addRecipient(GroupMailRecipient $recipient): self
     {
-        $this->recipients[] = $recipient;
+        $this->recipients->add($recipient);
 
         return $this;
     }
 
     /**
-     * Remove recipient
-     *
-     * @param GroupMailRecipient $recipient
+     * @return $this
      */
-    public function removeRecipient(GroupMailRecipient $recipient)
+    public function removeRecipient(GroupMailRecipient $recipient): self
     {
         $this->recipients->removeElement($recipient);
+
+        return $this;
     }
 
     /**
      * Get recipients
      *
-     * @return ArrayCollection
+     * @return GroupMailRecipient[]&Collection
      */
-    public function getRecipients()
+    public function getRecipients(): Collection
     {
         return $this->recipients;
     }
 
     /**
-     * Add file
-     *
-     * @param GroupMailFile $file
-     *
-     * @return GroupMail
+     * @return $this
      */
-    public function addFile(GroupMailFile $file)
+    public function addFile(GroupMailFile $file): self
     {
         $this->files[] = $file;
 
@@ -285,21 +234,19 @@ class GroupMail implements CrudInterface
     }
 
     /**
-     * Remove file
-     *
-     * @param \Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile $file
+     * @return $this
      */
-    public function removeFile(GroupMailFile $file)
+    public function removeFile(GroupMailFile $file): self
     {
         $this->files->removeElement($file);
+
+        return $this;
     }
 
     /**
-     * Get files
-     *
-     * @return ArrayCollection
+     * @return GroupMailFile[]&Collection
      */
-    public function getFiles()
+    public function getFiles(): Collection
     {
         return $this->files;
     }

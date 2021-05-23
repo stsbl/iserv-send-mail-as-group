@@ -1,5 +1,3 @@
-{# src/Stsbl/SendMailAsGroupBundle/Resources/views/macros.html.twig #}
-
 {% macro attachment_field(value) %}
     {% if value|length < 1 %}
         ({{ _('none') }})
@@ -23,7 +21,7 @@
                         {% else %}
                             {% set icon = 'legacy-file' %}
                         {% endif %}
-                        <a href="{{ path('group_mail_download', {'messageid': file.mail.id, 'attachmentid': file.id}) }}">{{ icon(icon) }}{{ file.name }}</a>
+                        <a href="{{ path('group_mail_download', {'messageId': file.mail.id, 'attachmentId': file.id}) }}">{{ icon(icon) }}{{ file.name }}</a>
                         <br />
                         <span class="text-muted small">({{ file.size }} KB)</span>
                     </div>

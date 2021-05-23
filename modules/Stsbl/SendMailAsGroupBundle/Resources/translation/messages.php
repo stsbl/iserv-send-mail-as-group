@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2021 Felix Jacobi.

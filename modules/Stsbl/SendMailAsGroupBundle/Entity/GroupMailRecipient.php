@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -44,24 +46,24 @@ class GroupMailRecipient implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="GroupMail", inversedBy="recipients", fetch="EAGER")
      * @ORM\JoinColumn(name="msg_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
-     * 
+     *
      * @var GroupMail
      */
     private $mail;
-    
+
     /**
      * @ORM\Column(name="recipient", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $recipient;
@@ -69,99 +71,70 @@ class GroupMailRecipient implements CrudInterface
     /**
      * @ORM\Column(name="recipient_display", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $recipientFullName;
-    
+
     /**
      * {@inheritdoc}
      */
-    public function __toString() 
+    public function __toString(): string
     {
         return sprintf('%s <%s>', $this->recipientFullName, $this->recipient);
     }
 
     /**
-     * Get id
-     * 
-     * @return integer
+     * {@inheritDoc}
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /* Generated getters and setters */
-    
+
     /**
-     * Set recipient
-     *
-     * @param string $recipient
-     *
-     * @return GroupMailRecipient
+     * @return $this
      */
-    public function setRecipient($recipient)
+    public function setRecipient(?string $recipient): self
     {
         $this->recipient = $recipient;
 
         return $this;
     }
 
-    /**
-     * Get recipient
-     *
-     * @return string
-     */
-    public function getRecipient()
+    public function getRecipient(): ?string
     {
         return $this->recipient;
     }
 
     /**
-     * Set recipientFullName
-     *
-     * @param string $recipientFullName
-     *
-     * @return GroupMailRecipient
+     * @return $this
      */
-    public function setRecipientFullName($recipientFullName)
+    public function setRecipientFullName(?string $recipientFullName): self
     {
         $this->recipientFullName = $recipientFullName;
 
         return $this;
     }
 
-    /**
-     * Get recipientFullName
-     *
-     * @return string
-     */
-    public function getRecipientFullName()
+    public function getRecipientFullName(): ?string
     {
         return $this->recipientFullName;
     }
 
     /**
-     * Set mail
-     *
-     * @param GroupMail $mail
-     *
-     * @return GroupMailRecipient
+     * @return $this
      */
-    public function setMail(GroupMail $mail = null)
+    public function setMail(?GroupMail $mail): self
     {
         $this->mail = $mail;
 
         return $this;
     }
 
-    /**
-     * Get mail
-     *
-     * @return GroupMail
-     */
-    public function getMail()
+    public function getMail(): ?GroupMail
     {
         return $this->mail;
     }

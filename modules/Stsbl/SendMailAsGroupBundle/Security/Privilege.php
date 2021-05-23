@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle\Security;
 
 /*
@@ -32,15 +34,15 @@ namespace Stsbl\SendMailAsGroupBundle\Security;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-final class Privilege 
+final class Privilege
 {
     /**
-     * Allows users to send an e-mail with the group as sender via the IDesk 
+     * Allows users to send an e-mail with the group as sender via the IDesk
      */
-    const SEND_AS_GROUP = 'PRIV_MAIL_SEND_AS_GRP';
-    
+    public const SEND_AS_GROUP = 'PRIV_MAIL_SEND_AS_GRP';
+
     /**
      * Controls if a group can used as a sender by the users witht the SEND_AS_GROUP privilege.
      */
-    const FLAG_USEABLE_AS_SENDER = 'mail_useable_as_sender';
+    public const FLAG_USEABLE_AS_SENDER = 'mail_useable_as_sender';
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Stsbl\SendMailAsGroupBundle\Service;
@@ -6,8 +7,8 @@ namespace Stsbl\SendMailAsGroupBundle\Service;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Exception\ShellExecException;
 use IServ\CoreBundle\Security\Core\SecurityHandler;
-use IServ\CoreBundle\Service\Config;
 use IServ\CoreBundle\Service\Shell;
+use IServ\Library\Config\Config;
 
 /*
  * The MIT License
@@ -41,18 +42,18 @@ use IServ\CoreBundle\Service\Shell;
  */
 final class SendMailAsGroup
 {
-    const COMMAND = '/usr/lib/iserv/mail_send_as_group';
-    
+    public const COMMAND = '/usr/lib/iserv/mail_send_as_group';
+
     /**
      * @var Shell
      */
     private $shell;
-    
+
     /**
      * @var SecurityHandler
      */
     private $securityHandler;
-    
+
     /**
      * @var Config
      */
@@ -67,7 +68,7 @@ final class SendMailAsGroup
         $this->securityHandler = $securityHandler;
         $this->config = $config;
     }
-    
+
     /**
      * Sends an e-mail with the given group as sender
      *
@@ -86,18 +87,18 @@ final class SendMailAsGroup
         $act = $this->securityHandler->getUser()->getUsername();
         $groupAct = $group->getAccount();
         $sessionPassword = $this->securityHandler->getSessionPassword();
-        
+
         $recipientAddresses = [];
         $recipientDisplay = [];
-        
+
         // split e-mail address information
         foreach ($recipients as $recipient) {
             $address = imap_rfc822_parse_adrlist($recipient, $this->config->get('Domain'));
-            
+
             if (!is_array($address) || count($address) !== 1) {
                 throw new \RuntimeException('Invalid result during e-mail address parsing.');
             }
-            
+
             $mergedAddress = sprintf('%s@%s', $address[0]->mailbox, $address[0]->host);
             $recipientAddresses[] = $mergedAddress;
             if (!empty($address[0]->personal)) {
@@ -108,7 +109,7 @@ final class SendMailAsGroup
                 $recipientDisplay[] = sprintf('"%s"', $mergedAddress);
             }
         }
-        
+
         $recipientArg = implode(',', $recipientAddresses);
         $recipientDisplayArg = implode(',', $recipientDisplay);
 
@@ -118,7 +119,7 @@ final class SendMailAsGroup
             // only scalars are allowed
             $attachmentsArg = '';
         }
-        
+
         // set LC_ALL to a translation with utf-8 to prevent destroying umlauts
         $environment = ['LC_ALL' => 'en_US.UTF-8', 'IP' => $ip, 'IPFWD' => $fwdIp, 'SESSPW' => $sessionPassword];
         try {
@@ -145,7 +146,7 @@ final class SendMailAsGroup
     {
         return $this->shell->getOutput();
     }
-    
+
     /**
      * Gets error output
      *
@@ -155,7 +156,7 @@ final class SendMailAsGroup
     {
         return $this->shell->getError();
     }
-    
+
     /**
      * Gets exit code of last executed command
      */

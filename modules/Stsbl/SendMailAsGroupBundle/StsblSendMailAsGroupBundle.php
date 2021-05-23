@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle;
 
 use IServ\CoreBundle\Routing\AutoloadRoutingBundleInterface;
 use Stsbl\SendMailAsGroupBundle\DependencyInjection\StsblSendMailAsGroupExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /*
@@ -34,12 +37,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class StsblSendMailAsGroupBundle extends Bundle implements AutoloadRoutingBundleInterface
+final class StsblSendMailAsGroupBundle extends Bundle implements AutoloadRoutingBundleInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension() 
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new StsblSendMailAsGroupExtension();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle\EventListener;
 
 use IServ\CoreBundle\Event\MenuEvent;
@@ -34,18 +36,18 @@ use Stsbl\SendMailAsGroupBundle\Security\Privilege;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class MenuListener implements MainMenuListenerInterface
+final class MenuListener implements MainMenuListenerInterface
 {
-    public function onBuildMainMenu(MenuEvent $event)
+    public function onBuildMainMenu(MenuEvent $event): void
     {
         // check if user is privileged
         if ($event->getAuthorizationChecker()->isGranted(Privilege::SEND_AS_GROUP)) {
-            $menu = $event->getMenu(self::COMMUNICATION);
+            $menu = $event->getMenu();
             $item = $menu->addChild('mail_grp', [
                 'route' => 'group_mail_index',
                 'label' => _('Group e-mail'),
             ]);
-            
+
             $item
                 ->setExtra('orderNumber', 2.5)
                 ->setExtra('icon', 'mail-reply-grp');

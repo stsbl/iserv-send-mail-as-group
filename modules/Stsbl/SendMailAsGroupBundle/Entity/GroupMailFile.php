@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stsbl\SendMailAsGroupBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -44,134 +46,103 @@ class GroupMailFile implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="GroupMail", inversedBy="files", fetch="EAGER")
      * @ORM\JoinColumn(name="msg_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
-     * 
+     *
      * @var GroupMail
      */
     private $mail;
-    
+
     /**
      * @ORM\Column(name="mime", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $mime;
-    
+
     /**
      * @ORM\Column(name="name", type="text", nullable=false)
      * @Assert\NotBlank()
-     * 
+     *
      * @var string
      */
     private $name;
-    
+
     /**
      * {@inheritdoc}
      */
-    public function __toString() 
+    public function __toString(): string
     {
-        return $this->name;
+        return $this->name ?? '?';
     }
 
     /**
-     * Get id
-     * 
-     * @return integer
+     * {@inheritDoc}
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
-    
+
     /**
      * Get the size in kb of the stored file
-     * 
-     * @return integer     
      */
-    public function getSize()
+    public function getSize(): int
     {
-        return (int)str_replace(',', '.', filesize(sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $this->id, $this->name)) / 1000); 
+        return (int)str_replace(',', '.', filesize(sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $this->id, $this->name)) / 1000);
     }
 
     /* Generated getters and setters */
-    
+
     /**
-     * Set mime
-     *
-     * @param string $mime
-     *
-     * @return GroupMailFile
+     * @return $this
      */
-    public function setMime($mime)
+    public function setMime(?string $mime): self
     {
         $this->mime = $mime;
 
         return $this;
     }
 
-    /**
-     * Get mime
-     *
-     * @return string
-     */
-    public function getMime()
+    public function getMime(): ?string
     {
         return $this->mime;
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return GroupMailFile
+     * @return $this
      */
-    public function setName($name)
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * Set mail
-     *
-     * @param GroupMail $mail
-     *
-     * @return GroupMailFile
+     * @return $this
      */
-    public function setMail(GroupMail $mail = null)
+    public function setMail(GroupMail $mail = null): self
     {
         $this->mail = $mail;
 
         return $this;
     }
 
-    /**
-     * Get mail
-     *
-     * @return GroupMail
-     */
-    public function getMail()
+    public function getMail(): ?GroupMail
     {
         return $this->mail;
     }

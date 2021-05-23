@@ -1,6 +1,5 @@
-{# src/Stsbl/SendMailAsGroupBundle/Resources/views/List/field_attachment.html.twig #}
 {% extends admin.getTemplate('list_field_base') %}
-{% import 'StsblSendMailAsGroupBundle::macros.html.twig' as m %}
+{% import '@StsblSendMailAsGroup/macros.html.twig' as m %}
 
 {% block field %}
     {{ m.attachment_field(value) }}
