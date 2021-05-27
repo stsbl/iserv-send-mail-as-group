@@ -165,22 +165,10 @@ final class GroupMailCrud extends ServiceCrud
      */
     public static function defineRoutes(): RoutingDefinition
     {
-        $definition = parent::defineRoutes()
+        return parent::createRoutes('group_mail', 'groupmail')
             ->useControllerForAction(self::ACTION_INDEX, CrudController::class . '::indexAction')
-            ->setNamePrefix('') // Set via basename, remove crud_ prefix
+            ->setNamePrefix('')
         ;
-
-        // FIXME: Remove, after CRUD allows proper access!
-        try {
-            $reflectionProperty = new \ReflectionProperty($definition, 'baseName');
-        } catch (\ReflectionException $e) {
-            throw new \RuntimeException('Could not reflect!', 0, $e);
-        }
-
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($definition, 'group_mail');
-
-        return $definition;
     }
 
     /**

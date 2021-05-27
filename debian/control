@@ -9,6 +9,7 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-send-mail-as-group
 Package: stsbl-iserv-send-mail-as-group
 Architecture: all
 Depends: iserv-portal,
+         iserv3-crud (>= 21.05.27),
          libfile-mimeinfo-perl,
          stsbl-iserv3-maintenance,
          ${misc:Depends},
