@@ -1,3 +1,14 @@
+stsbl-iserv-send-mail-as-group (21.06.09.1) testing; urgency=medium
+
+  * Fixed Build-Depends
+  * Moved to iservinstall
+  * Updated copyright
+  * Turned source format to native
+  * Rectored code and fixed deprecations
+  * Removed CRUD hack of evilness
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Wed, 09 Jun 2021 23:05:50 +0200
+
 stsbl-iserv-send-mail-as-group (20.09.17-1) stable; urgency=medium
 
   * Updated license copyright
