@@ -97,7 +97,7 @@ class GroupMailFile implements CrudInterface
      */
     public function getSize(): int
     {
-        return (int)str_replace(',', '.', filesize(sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $this->id, $this->name)) / 1000);
+        return (int)str_replace(',', '.', (string)(filesize(sprintf('/var/lib/stsbl/send-mail-as-group/mail-files/%s-%s', $this->id, $this->name)) / 1000));
     }
 
     /* Generated getters and setters */
