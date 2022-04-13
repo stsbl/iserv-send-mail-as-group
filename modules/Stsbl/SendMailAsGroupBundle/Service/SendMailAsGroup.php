@@ -9,6 +9,7 @@ use IServ\CoreBundle\Exception\ShellExecException;
 use IServ\CoreBundle\Security\Core\SecurityHandler;
 use IServ\CoreBundle\Service\Shell;
 use IServ\Library\Config\Config;
+use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 
 /*
  * The MIT License
@@ -93,7 +94,7 @@ final class SendMailAsGroup
 
         // split e-mail address information
         foreach ($recipients as $recipient) {
-            $address = imap_rfc822_parse_adrlist($recipient, $this->config->get('Domain'));
+            $address = PhpImapReplacement::imap_rfc822_parse_adrlist($recipient, $this->config->get('Domain'));
 
             if (!is_array($address) || count($address) !== 1) {
                 throw new \RuntimeException('Invalid result during e-mail address parsing.');
