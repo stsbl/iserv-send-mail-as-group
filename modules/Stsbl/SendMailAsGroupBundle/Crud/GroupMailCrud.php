@@ -66,8 +66,8 @@ final class GroupMailCrud extends ServiceCrud
         $this->title = _('Group e-mail');
         $this->itemTitle = _('E-mail');
         $this->id = 'group_mail';
-        $this->templates['crud_index'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_index.html.twig';
-        $this->templates['crud_show'] = 'StsblSendMailAsGroupBundle:Crud:groupmail_show.html.twig';
+        $this->templates['crud_index'] = '@StsblSendMailAsGroup/Crud/groupmail_index.html.twig';
+        $this->templates['crud_show'] = '@StsblSendMailAsGroup/Crud/groupmail_show.html.twig';
         $this->options['export'] = false;
     }
 
@@ -88,8 +88,8 @@ final class GroupMailCrud extends ServiceCrud
         $listMapper->add('recipients', null, ['label' => _('Recipients')]);
         $listMapper->add('sender', null, ['label' => _('Sending group'), 'responsive' => 'min-tablet']);
         $listMapper->add('date', null, ['label' => _('Date')]);
-        $listMapper->add('messageBody', null, ['label' => _('Message text'), 'template' => 'StsblSendMailAsGroupBundle:List:field_messagetext.html.twig']);
-        $listMapper->add('files', null, ['label' => _('Attached files'), 'responsive' => 'desktop', 'template' => 'StsblSendMailAsGroupBundle:List:field_attachment.html.twig']);
+        $listMapper->add('messageBody', null, ['label' => _('Message text'), 'template' => '@StsblSendMailAsGroup/List/field_messagetext.html.twig']);
+        $listMapper->add('files', null, ['label' => _('Attached files'), 'responsive' => 'desktop', 'template' => '@StsblSendMailAsGroup/List/field_attachment.html.twig']);
     }
 
     /**
@@ -101,8 +101,8 @@ final class GroupMailCrud extends ServiceCrud
         $showMapper->add('recipients', null, ['label' => _('Recipients')]);
         $showMapper->add('sender', null, ['label' => _('Sending group')]);
         $showMapper->add('date', null, ['label' => _('Date')]);
-        $showMapper->add('messageBody', null, ['label' => _('Message text'), 'template' => 'StsblSendMailAsGroupBundle:Show:field_messagetext.html.twig']);
-        $showMapper->add('files', null, ['label' => _('Attached files'), 'template' => 'StsblSendMailAsGroupBundle:Show:field_attachment.html.twig']);
+        $showMapper->add('messageBody', null, ['label' => _('Message text'), 'template' => '@StsblSendMailAsGroup/Show/field_messagetext.html.twig']);
+        $showMapper->add('files', null, ['label' => _('Attached files'), 'template' => '@StsblSendMailAsGroup/Show/field_attachment.html.twig']);
     }
 
     /**
