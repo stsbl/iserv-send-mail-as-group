@@ -1,10 +1,12 @@
 priv.mail_send_as_grp:
+uuid 		901dc90a-f6a8-45f2-80d4-84c3c2cccdaf
 module          E-mail
 title           Send e-mails in name of groups
 description     Users with this privilege can send e-mails with a group where there are a member as sender.
 assign          admins
 
 flag.mail_useable_as_sender:
+uuid 		a1dcfa86-58a6-4c9e-b366-76e65c1d9259
 module          E-mail
 title           Group can be used as sender
 description     Assign this flag to groups which are supposed to be used as sender by users with the privilege "Send e-mails in name of group".
