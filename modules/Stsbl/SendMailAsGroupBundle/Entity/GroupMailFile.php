@@ -46,35 +46,27 @@ class GroupMailFile implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="GroupMail", inversedBy="files", fetch="EAGER")
      * @ORM\JoinColumn(name="msg_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
-     *
-     * @var GroupMail
      */
-    private $mail;
+    private ?GroupMail $mail;
 
     /**
      * @ORM\Column(name="mime", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $mime;
+    private ?string $mime;
 
     /**
      * @ORM\Column(name="name", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $name;
+    private ?string $name;
 
     /**
      * {@inheritdoc}

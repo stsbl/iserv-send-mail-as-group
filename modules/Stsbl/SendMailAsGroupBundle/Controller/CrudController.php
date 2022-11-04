@@ -60,10 +60,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 final class CrudController extends BaseCrudController
 {
-    /*
+    /**
      * @var Filesystem
      */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     /**
      * The constructor.

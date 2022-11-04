@@ -46,35 +46,27 @@ class GroupMailRecipient implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="GroupMail", inversedBy="recipients", fetch="EAGER")
      * @ORM\JoinColumn(name="msg_id", referencedColumnName="id", onDelete="CASCADE")
      * @Assert\NotBlank()
-     *
-     * @var GroupMail
      */
-    private $mail;
+    private ?GroupMail $mail;
 
     /**
      * @ORM\Column(name="recipient", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $recipient;
+    private ?string $recipient;
 
     /**
      * @ORM\Column(name="recipient_display", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $recipientFullName;
+    private ?string $recipientFullName;
 
     /**
      * {@inheritdoc}

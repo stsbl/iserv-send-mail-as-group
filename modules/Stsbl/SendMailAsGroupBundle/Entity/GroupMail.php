@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CrudBundle\Entity\CrudInterface;
+use IServ\Library\Zeit\Zeit;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -49,62 +50,53 @@ class GroupMail implements CrudInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(name="msg_title", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $messageTitle;
+    private ?string $messageTitle;
 
     /**
      * @ORM\ManyToOne(targetEntity="\IServ\CoreBundle\Entity\Group", fetch="EAGER")
      * @ORM\JoinColumn(name="sender", referencedColumnName="act", onDelete="CASCADE")
      * @Assert\NotBlank()
-     *
-     * @var Group
      */
-    private $sender;
+    private ?Group $sender;
 
     /**
      * @ORM\Column(name="msg_body", type="text", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $messageBody;
+    private ?string $messageBody;
 
     /**
-     * @ORM\Column(name="time", type="datetime", nullable=false)
+     * @ORM\Column(name="time", type="datetimetz_immutable", nullable=false)
      * @Assert\NotBlank()
-     *
-     * @var \DateTime
      */
-    private $date;
+    private \DateTimeImmutable $date;
 
     /**
      * @ORM\OneToMany(targetEntity="GroupMailRecipient", mappedBy="mail")
      *
      * @var GroupMailRecipient[]&Collection
      */
-    private $recipients;
+    private Collection $recipients;
 
     /**
      * @ORM\OneToMany(targetEntity="GroupMailFile", mappedBy="mail")
      *
      * @var GroupMailFile[]&Collection
      */
-    private $files;
+    private Collection $files;
 
     public function __construct()
     {
         $this->recipients = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->date = Zeit::now();
     }
 
     /**
@@ -174,21 +166,9 @@ class GroupMail implements CrudInterface
     }
 
     /**
-     * @return $this
-     */
-    public function setDate(?\DateTime $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
      * Get date
-     *
-     * @return \DateTime
      */
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
     }

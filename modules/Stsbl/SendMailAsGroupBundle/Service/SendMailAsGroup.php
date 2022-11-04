@@ -45,29 +45,11 @@ final class SendMailAsGroup
 {
     public const COMMAND = '/usr/lib/iserv/mail_send_as_group';
 
-    /**
-     * @var Shell
-     */
-    private $shell;
-
-    /**
-     * @var SecurityHandler
-     */
-    private $securityHandler;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * The constructor
-     */
-    public function __construct(Shell $shell, SecurityHandler $securityHandler, Config $config)
-    {
-        $this->shell = $shell;
-        $this->securityHandler = $securityHandler;
-        $this->config = $config;
+    public function __construct(
+        private readonly Shell $shell,
+        private readonly SecurityHandler $securityHandler,
+        private readonly Config $config,
+    ) {
     }
 
     /**
