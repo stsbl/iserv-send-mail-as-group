@@ -258,7 +258,7 @@ final class CrudController extends BaseCrudController
      */
     public function downloadAction(int $messageId, int $attachmentId, UserStorageInterface $userStorage): Response
     {
-        $groupRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMail');
+        $groupRepo = $this->getDoctrine()->getRepository(\Stsbl\SendMailAsGroupBundle\Entity\GroupMail::class);
         /* @var $mail \Stsbl\SendMailAsGroupBundle\Entity\GroupMail */
         $mail = $groupRepo->find($messageId);
 
@@ -270,7 +270,7 @@ final class CrudController extends BaseCrudController
             throw $this->createAccessDeniedException('You are not allowed to view content of this message.');
         }
 
-        $fileRepo = $this->getDoctrine()->getRepository('StsblSendMailAsGroupBundle:GroupMailFile');
+        $fileRepo = $this->getDoctrine()->getRepository(\Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile::class);
         /* @var $file \Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile */
         $file = $fileRepo->findOneBy(['id' => $attachmentId]);
 

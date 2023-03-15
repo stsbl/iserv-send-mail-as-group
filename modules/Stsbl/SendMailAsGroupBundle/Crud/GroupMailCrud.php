@@ -117,7 +117,7 @@ final class GroupMailCrud extends ServiceCrud
 
         $qb
             ->select('p')
-            ->from('StsblSendMailAsGroupBundle:GroupMail', 'p')
+            ->from(\Stsbl\SendMailAsGroupBundle\Entity\GroupMail::class, 'p')
         ;
 
         $groupRepository = $om->getRepository(Group::class);
