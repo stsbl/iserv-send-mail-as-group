@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stsbl\SendMailAsGroupBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use IServ\AddressbookBundle\Service\Addressbook;
 use IServ\BootstrapBundle\Form\Type\BootstrapCollectionType;
 use IServ\CoreBundle\Entity\Group;
@@ -11,6 +12,8 @@ use IServ\CoreBundle\Entity\GroupFlag;
 use IServ\CoreBundle\Service\User\UserStorageInterface;
 use IServ\CrudBundle\Controller\StrictCrudController as BaseCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Stsbl\SendMailAsGroupBundle\Entity\GroupMail;
+use Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile;
 use Stsbl\SendMailAsGroupBundle\Security\Privilege;
 use Stsbl\SendMailAsGroupBundle\Service\SendMailAsGroup;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -192,7 +195,7 @@ final class CrudController extends BaseCrudController
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
      * @Route("groupmail/mailext", name="group_mail_lookup_priv", options={"expose": true}, methods={"GET"})
      */
-    public function lookupPrivAction(Request $request): JsonResponse
+    public function lookupPrivAction(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Get group act and type from request
         $groupAct = $request->query->get('group');
@@ -218,7 +221,7 @@ final class CrudController extends BaseCrudController
         } elseif ($type === 'flag_internal') {
             // Support for stsbl-iserv-mail-config
             // Only enable it if the flag exists
-            $fr = $this->getDoctrine()->getRepository(GroupFlag::class);
+            $fr = $em->getRepository(GroupFlag::class);
             $flag = $fr->find('mail_int');
 
             // skip if not supported
@@ -256,10 +259,9 @@ final class CrudController extends BaseCrudController
      * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
      * @Route("/groupmail/download/{messageId}/{attachmentId}", name="group_mail_download", methods={"GET"})
      */
-    public function downloadAction(int $messageId, int $attachmentId, UserStorageInterface $userStorage): Response
+    public function downloadAction(int $messageId, int $attachmentId, UserStorageInterface $userStorage, EntityManagerInterface $em): Response
     {
-        $groupRepo = $this->getDoctrine()->getRepository(\Stsbl\SendMailAsGroupBundle\Entity\GroupMail::class);
-        /* @var $mail \Stsbl\SendMailAsGroupBundle\Entity\GroupMail */
+        $groupRepo = $em->getRepository(GroupMail::class);
         $mail = $groupRepo->find($messageId);
 
         if (null === $mail) {
@@ -270,8 +272,7 @@ final class CrudController extends BaseCrudController
             throw $this->createAccessDeniedException('You are not allowed to view content of this message.');
         }
 
-        $fileRepo = $this->getDoctrine()->getRepository(\Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile::class);
-        /* @var $file \Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile */
+        $fileRepo = $em->getRepository(GroupMailFile::class);
         $file = $fileRepo->findOneBy(['id' => $attachmentId]);
 
         if (null === $file) {
@@ -302,7 +303,7 @@ final class CrudController extends BaseCrudController
     {
         $builder = $this->get('form.factory')->createNamedBuilder('compose_group_mail');
 
-        $er = $this->getDoctrine()->getRepository(Group::class);
+        $er = $this->container->get(EntityManagerInterface::class)->getRepository(Group::class);
 
         $groups = $er->createFindByFlagQueryBuilder(Privilege::FLAG_USEABLE_AS_SENDER)
             ->orderBy('LOWER(g.name)', 'ASC')
@@ -325,7 +326,7 @@ final class CrudController extends BaseCrudController
             ])
             ->add('group', EntityType::class, [
                 'label' => _('Sender'),
-                'class' => 'IServCoreBundle:Group',
+                'class' => Group::class,
                 'select2-icon' => 'legacy-act-group',
                 'multiple' => false,
                 'required' => false,
@@ -430,7 +431,7 @@ final class CrudController extends BaseCrudController
 
             $msgTitle = $data['subject'];
 
-            $sendMailService = $this->get(SendMailAsGroup::class);
+            $sendMailService = $this->container->get(SendMailAsGroup::class);
 
             $sendMailService->send($ip, $fwdIp, $group, $recipients, $msgTitle, $msgFile, $attachments);
             $successMessages = $sendMailService->getOutput();
@@ -453,6 +454,7 @@ final class CrudController extends BaseCrudController
     {
         $deps = parent::getSubscribedServices();
 
+        $deps[] = EntityManagerInterface::class;
         $deps[] = SendMailAsGroup::class;
 
         return $deps;
