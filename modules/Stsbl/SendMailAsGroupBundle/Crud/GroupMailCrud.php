@@ -6,7 +6,6 @@ namespace Stsbl\SendMailAsGroupBundle\Crud;
 
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\Specification\GroupsMembershipSpecification;
-use IServ\CrudBundle\Crud\AbstractCrud;
 use IServ\CrudBundle\Crud\ServiceCrud;
 use IServ\CrudBundle\Doctrine\ORM\ORMObjectManager;
 use IServ\CrudBundle\Doctrine\Specification\SpecificationInterface;
