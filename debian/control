@@ -8,9 +8,16 @@ Homepage: https://it.stsbl.de/documentation/mods/stsbl-iserv-send-mail-as-group
 
 Package: stsbl-iserv-send-mail-as-group
 Architecture: all
-Depends: iserv-portal,
+Depends: iserv-config-file,
+         iserv-server-postgresql,
+         iserv-user-backend,
+         iserv3-core,
          iserv3-crud (>= 21.05.27),
          libfile-mimeinfo-perl,
+         libfile-slurp-perl,
+         libfile-slurp-unicode-perl,
+         libmime-lite-perl,
+         sessauthd,
          stsbl-iserv3-maintenance,
          ${misc:Depends},
          ${perl:Depends}

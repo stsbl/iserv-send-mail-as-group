@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Stsbl\SendMailAsGroupBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use IServ\AddressbookBundle\Service\Addressbook;
-use IServ\BootstrapBundle\Form\Type\BootstrapCollectionType;
+use IServ\Bundle\Autocomplete\Domain\AutocompleteType;
+use IServ\Bundle\Autocomplete\Form\Data\AutocompleteTagsData;
+use IServ\Bundle\Autocomplete\Form\Type\AutocompleteTagsType;
 use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Entity\GroupFlag;
 use IServ\CoreBundle\Service\User\UserStorageInterface;
 use IServ\CrudBundle\Controller\StrictCrudController as BaseCrudController;
+use IServ\FilesystemBundle\Model\File;
+use IServ\FilesystemBundle\Upload\Form\Type\UniversalFileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Stsbl\SendMailAsGroupBundle\Entity\GroupMail;
 use Stsbl\SendMailAsGroupBundle\Entity\GroupMailFile;
@@ -18,12 +21,10 @@ use Stsbl\SendMailAsGroupBundle\Security\Privilege;
 use Stsbl\SendMailAsGroupBundle\Service\SendMailAsGroup;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,37 +86,6 @@ final class CrudController extends BaseCrudController
         $ret['compose_form'] = $this->getForm()->createView();
 
         return $ret;
-    }
-
-    /**
-     * @Route("/groupmail/lookup", name="group_mail_autocomplete", options={"expose" = true}, methods={"GET"})
-     * @Security("is_granted('PRIV_MAIL_SEND_AS_GRP')")
-     */
-    public function lookupAction(Request $request, Addressbook $addressbook): JsonResponse
-    {
-        // Get query from request
-        $query = $request->query->get('query');
-        $explodedQuery = explode(',', $query);
-
-        // only search for last element
-        $search = trim(array_pop($explodedQuery));
-        $excludeLists = true;
-        $result =  [];
-
-        if (null !== $search && '' != $query) {
-            $result = $addressbook->lookup($search, $excludeLists);
-
-            $originalQuery = implode(', ', $explodedQuery);
-
-            foreach ($result as &$row) {
-                // append result to original query
-                if (!empty($explodedQuery)) {
-                    $row['value'] = $originalQuery . ', ' . $row['value'];
-                }
-            }
-        }
-        // Return a json response
-        return new JsonResponse($result);
     }
 
     /**
@@ -337,13 +307,11 @@ final class CrudController extends BaseCrudController
                     'placeholder' => _('Select a group...'),
                 ],
             ])
-            ->add('recipients', TextType::class, [
+            ->add('recipients', AutocompleteTagsType::class, [
                 'label' => _('Recipients'),
                 'required' => true,
                 'constraints' => [new NotBlank(['message' => _('Recipients should not be empty.')])],
-                'attr' => [
-                    'help_text' => _('Separate multiple recipients with a comma.'),
-                ],
+                'autocomplete_types' => [AutocompleteType::MAIL],
             ])
             ->add('body', TextareaType::class, [
                 'label' => _('Message'),
@@ -353,18 +321,9 @@ final class CrudController extends BaseCrudController
                     'rows' => 20,
                 ],
             ])
-            ->add('attachments', BootstrapCollectionType::class, [
+            ->add('attachments', UniversalFileType::class, [
                 'required' => false,
                 'label' => _('Attachments'),
-                'entry_type' => FileType::class,
-                'prototype_name' => 'proto-entry',
-                // Child options
-                'entry_options' => [
-                    'required' => false,
-                    'attr' => [
-                        'widget_col' => 12, // Single child field w/o label col
-                    ],
-                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => _('Send'),
@@ -405,28 +364,39 @@ final class CrudController extends BaseCrudController
             $msgFile = $dir . 'content.txt';
             $this->filesystem->dumpFile($msgFile, $data['body']);
 
-            /** @var UploadedFile[] $uploadedFiles */
+            /** @var File[] $uploadedFiles */
             $uploadedFiles = $data['attachments'];
 
             if (count($uploadedFiles) > 0) {
                 $attachments = [];
 
                 foreach ($uploadedFiles as $attachment) {
-                    $newName = $attachment->getClientOriginalName();
-                    $attachment->move($dir, $newName);
+                    $newName = $attachment->getName();
+                    $destination = $dir . $newName;
 
-                    $attachments[] = $dir . $newName;
+                    $this->filesystem->dumpFile($destination, $attachment->readStream());
+
+                    $attachments[] = $destination;
                 }
             } else {
                 $attachments = null;
             }
 
             $group = $data['group'];
-            $recipients = explode(',', $data['recipients']);
+            /** @var AutocompleteTagsData[] $recipientData */
+            $recipientData = $data['recipients'];
+            $recipients = [];
 
-            foreach ($recipients as $key => $recipient) {
-                // remove leading and ending spaces
-                $recipients[$key] = trim($recipient);
+            foreach ($recipientData as $recipient) {
+                $recipientValue = $recipient->getValue();
+
+                // Just WHY?
+                $source = $recipient->getSource();
+                if ($source !== null) {
+                    $recipientValue = preg_replace(sprintf('/^%s:/', preg_quote($source, '/')), '', $recipientValue);
+                }
+
+                $recipients[] = $recipientValue;
             }
 
             $msgTitle = $data['subject'];

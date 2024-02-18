@@ -4,7 +4,6 @@ debian/stsbl-iserv-send-mail-as-group.substvars
 debian/files
 debian/debhelper-build-stamp
 /Makefile.iservmake
-/locale
 /system-locale
 !/locale/templates/*_misc.pot
 /public/assets

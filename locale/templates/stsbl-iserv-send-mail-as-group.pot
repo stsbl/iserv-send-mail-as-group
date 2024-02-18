@@ -1,7 +1,7 @@
 # TRANSLATION CATALOG OF STSBL-ISERV-SEND-MAIL-AS-GROUP.
-# Copyright (C) 2023 IServ GmbH
+# Copyright (C) 2024 IServ GmbH
 # This file is distributed under the same license as the stsbl-iserv-send-mail-as-group package.
-# IServ GmbH <info@iserv.eu>, 2023.
+# IServ GmbH <info@iserv.eu>, 2024.
 #
 #, fuzzy
 msgid ""
@@ -80,8 +80,8 @@ msgstr ""
 msgid "Message text"
 msgstr ""
 
-#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
 #: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
+#: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
 msgid "Recipients"
 msgstr ""
 
@@ -116,10 +116,6 @@ msgstr ""
 
 #: modules/Stsbl/SendMailAsGroupBundle/Crud/GroupMailCrud.php
 msgid "Sending group"
-msgstr ""
-
-#: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php
-msgid "Separate multiple recipients with a comma."
 msgstr ""
 
 #: modules/Stsbl/SendMailAsGroupBundle/Controller/CrudController.php

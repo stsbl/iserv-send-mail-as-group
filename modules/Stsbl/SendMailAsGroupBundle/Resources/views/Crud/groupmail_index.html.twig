@@ -20,11 +20,6 @@
     <script type="text/javascript" src="{{ asset('js/mail-as-group_form.js', 'stsbl_send_mail_as_group') }}"></script>
     
     {% if app.environment != 'prod' %}
-	<!-- {{ _self }} => mail-as-group_autocomplete.js -->
-    {% endif %}
-    <script type="text/javascript" src="{{ asset('js/mail-as-group_autocomplete.js', 'stsbl_send_mail_as_group') }}"></script>
-
-    {% if app.environment != 'prod' %}
 	<!-- {{ _self }} => mail-as-group_scroll.js -->
     {% endif %}
     <script type="text/javascript" src="{{ asset('js/mail-as-group_scroll.js', 'stsbl_send_mail_as_group') }}"></script>
