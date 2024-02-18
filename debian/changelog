@@ -1,3 +1,13 @@
+stsbl-iserv-send-mail-as-group (24.02.18.1) stable; urgency=medium
+
+  * Renamed pot files
+  * Updated .gitignore
+  * Updated CS to PSR-12
+  * Added missing dependencies, fixed autocomplete, added universal file
+    upload
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sun, 18 Feb 2024 10:43:39 +0100
+
 stsbl-iserv-send-mail-as-group (23.04.21.1) stable; urgency=medium
 
   * Fixed entity reference
