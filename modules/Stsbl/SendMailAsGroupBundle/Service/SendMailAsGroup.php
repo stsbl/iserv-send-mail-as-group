@@ -8,8 +8,8 @@ use IServ\CoreBundle\Entity\Group;
 use IServ\CoreBundle\Exception\ShellExecException;
 use IServ\CoreBundle\Security\Core\SecurityHandler;
 use IServ\CoreBundle\Service\Shell;
+use IServ\Library\Address\AddressList;
 use IServ\Library\Config\Config;
-use IServ\Library\PhpImapReplacement\PhpImapReplacement;
 
 /*
  * The MIT License
@@ -76,17 +76,18 @@ final class SendMailAsGroup
 
         // split e-mail address information
         foreach ($recipients as $recipient) {
-            $address = PhpImapReplacement::imap_rfc822_parse_adrlist($recipient, $this->config->get('Domain'));
+            $addresses = AddressList::create($recipient, $this->config->get('Domain'))->getAddresses();
 
-            if (!is_array($address) || count($address) !== 1) {
+            if (count($addresses) !== 1) {
                 throw new \RuntimeException('Invalid result during e-mail address parsing.');
             }
 
-            $mergedAddress = sprintf('%s@%s', $address[0]->mailbox, $address[0]->host);
+            $address = $addresses[0];
+            $mergedAddress = $address->getAddress();
             $recipientAddresses[] = $mergedAddress;
-            if (!empty($address[0]->personal)) {
+            if (!empty($address->getName())) {
                 // try to use extracted name
-                $recipientDisplay[] = $address[0]->personal;
+                $recipientDisplay[] = $address->getName();
             } else {
                 // elsewhere use quoted merged mailbox and host as display name
                 $recipientDisplay[] = sprintf('"%s"', $mergedAddress);
