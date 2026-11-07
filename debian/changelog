@@ -1,3 +1,12 @@
+stsbl-iserv-send-mail-as-group (26.11.07.1) stable; urgency=medium
+
+  * Restore group mail sending with mailparse-backed address parsing
+
+  iserv: Die Funktionalität des Moduls wurde wiederhergestellt, indem
+    Kompatbilität mit aktuellen IServ-Updates hergestellt wurde.
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sat, 07 Nov 2026 12:26:21 +0100
+
 stsbl-iserv-send-mail-as-group (24.02.18.1) stable; urgency=medium
 
   * Renamed pot files
